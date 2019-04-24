@@ -105,6 +105,12 @@
 					"SqlServer1_password": {
 						"value": "[parameters('SqlServer1_password')]"
 					},
+					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
+						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart')]"
+					},
+					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
+						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd')]"
+					},
 					"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
 					},
@@ -149,12 +155,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
-						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart')]"
-					},
-					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
-						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd')]"
 					}
 				}
 			},
