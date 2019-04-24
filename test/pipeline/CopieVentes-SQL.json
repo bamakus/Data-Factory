@@ -1,0 +1,61 @@
+{
+	"name": "CopieVentes-SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy-dbo_Ventes",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "select * from [dbo].[Ventes] where [Date_facture] >= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' AND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd, 'yyyy-MM-dd HH:mm' )}'",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Client_FK": "Client_FK",
+							"CA": "CA",
+							"Budget": "Budget",
+							"Date_facture": "Date_facture",
+							"Type_Vente": "Type_Vente_FK"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dbo_Ventes_i_ojw",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dbo_Ventes_o_ojw",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"windowStart": {
+				"type": "String"
+			},
+			"windowEnd": {
+				"type": "String"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

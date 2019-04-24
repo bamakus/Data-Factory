@@ -1,0 +1,52 @@
+{
+	"name": "dbo_DimClient_o_aqz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "Client_PK",
+				"type": "Int32"
+			},
+			{
+				"name": "ClientCode",
+				"type": "String"
+			},
+			{
+				"name": "Client",
+				"type": "String"
+			},
+			{
+				"name": "TypeClient",
+				"type": "String"
+			},
+			{
+				"name": "SegmentationClient",
+				"type": "String"
+			},
+			{
+				"name": "DateDebut",
+				"type": "DateTime"
+			},
+			{
+				"name": "DateFin",
+				"type": "DateTime"
+			},
+			{
+				"name": "IsRowCurrent",
+				"type": "Int32"
+			},
+			{
+				"name": "LastUpdated",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[DimClient]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,14 @@
+{
+	"name": "SourceDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"typeProperties": {
+			"tableName": "[dbo].[data_source_table]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "dbo_DimTypeVente_o_aqz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "Type_Vente_PK",
+				"type": "Int32"
+			},
+			{
+				"name": "Type_Vente",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[DimTypeVente]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "Test_parametres",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set Variable1",
+				"type": "SetVariable",
+				"typeProperties": {
+					"variableName": "Mon_nom",
+					"value": "\"Marcel\""
+				}
+			}
+		],
+		"variables": {
+			"Mon_nom": {
+				"type": "String"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

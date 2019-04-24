@@ -1,0 +1,52 @@
+{
+	"name": "Master_Liste_tables_a_copier",
+	"properties": {
+		"activities": [
+			{
+				"name": "Liste_tables_source",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES \nWHERE TABLE_NAME IN ('DimTypeVente' , 'DimClient')"
+					},
+					"dataset": {
+						"referenceName": "Table_source",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Liste_tables_source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Iterations_Copie_Table",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"tableList": {
+							"value": "@activity('Liste_tables_source').output.value",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

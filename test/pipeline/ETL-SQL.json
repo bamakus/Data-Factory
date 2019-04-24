@@ -1,0 +1,171 @@
+{
+	"name": "ETL-SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy-dbo_DimClient",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "select *, cast(null as date) as datedebut , cast(null as date) as datefin, cast(null as int) as currentrow,getdate() as lastupdate   from [dbo].[DimClient]"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "delete dbo.DimClient"
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Client_PK": "Client_PK",
+							"ClientCode": "ClientCode",
+							"Client": "Client",
+							"TypeClient": "TypeClient",
+							"SegmentationClient": "SegmentationClient",
+							"datedebut": "DateDebut",
+							"datefin": "DateFin",
+							"currentrow": "IsRowCurrent",
+							"lastupdate": "LastUpdated"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dbo_DimClient_i_aqz",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dbo_DimClient_o_aqz",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy-dbo_Ventes",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy-dbo-type_vente",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "Select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK  from [dbo].[Ventes]  A Left JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente  Where \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "delete dbo.Ventes where  \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Client_FK": "Client_FK",
+							"CA": "CA",
+							"Budget": "Budget",
+							"Date_facture": "Date_facture",
+							"Type_Vente_FK": "Type_Vente_FK"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dbo_Ventes_i_aqz",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dbo_Ventes_o_aqz",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy-dbo-type_vente",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy-dbo_DimClient",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "delete DimTypeVente"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Type_Vente_PK": "Type_Vente_PK",
+							"Type_Vente": "Type_Vente"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dbo_DimTypeVente_i_aqz",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dbo_DimTypeVente_o_aqz",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"windowStart": {
+				"type": "String"
+			},
+			"windowEnd": {
+				"type": "String"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

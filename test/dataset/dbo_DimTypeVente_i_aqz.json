@@ -1,0 +1,24 @@
+{
+	"name": "dbo_DimTypeVente_i_aqz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Type_Vente_PK",
+				"type": "Int32"
+			},
+			{
+				"name": "Type_Vente",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[DimTypeVente]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

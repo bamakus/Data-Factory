@@ -1,0 +1,69 @@
+{
+	"name": "Iterations_Copie_Table",
+	"properties": {
+		"description": "Paramètre pipeline = Liste de tables (type objet) \nBoucle sur objet \nLe nom de la table réceptacle est variabilisé",
+		"activities": [
+			{
+				"name": "IterationTablesSQL",
+				"type": "ForEach",
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tableList",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy1",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30
+							},
+							"typeProperties": {
+								"source": {
+									"type": "SqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT * FROM [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000,
+									"preCopyScript": {
+										"value": "TRUNCATE TABLE [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+										"type": "Expression"
+									}
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0
+							},
+							"inputs": [
+								{
+									"referenceName": "Table_source",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Table_target",
+									"type": "DatasetReference",
+									"parameters": {
+										"DWTableName": "[@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"tableList": {
+				"type": "Object"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

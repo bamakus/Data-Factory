@@ -1,0 +1,102 @@
+{
+	"name": "Copie de Fichiers - Blob",
+	"properties": {
+		"description": "https://hk.saowen.com/a/2a1ceb923605903a033b4b0d988068987720d1c9324cb285f76acfae564f65b1",
+		"activities": [
+			{
+				"name": "Liste_des_fichiers",
+				"type": "GetMetadata",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					]
+				}
+			},
+			{
+				"name": "Alimentation_tab",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Liste_des_fichiers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Liste_des_fichiers').output.childitems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append Variable1",
+							"type": "AppendVariable",
+							"typeProperties": {
+								"variableName": "var_file_list",
+								"value": {
+									"value": "concat('adfv2branch/',item().name)",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lecture_tab",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Alimentation_tab",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('var_file_list')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Set Variable1",
+							"type": "SetVariable",
+							"typeProperties": {
+								"variableName": "resultat",
+								"value": "KO"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"sinkBlobContainer": {
+				"type": "String"
+			}
+		},
+		"variables": {
+			"var_file_list": {
+				"type": "Array"
+			},
+			"resultat": {
+				"type": "String",
+				"defaultValue": "KO"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

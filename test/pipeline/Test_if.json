@@ -1,0 +1,125 @@
+{
+	"name": "Test_if",
+	"properties": {
+		"activities": [
+			{
+				"name": "MyIfCondition",
+				"type": "IfCondition",
+				"typeProperties": {
+					"expression": {
+						"value": "@bool(pipeline().parameters.routeSelection)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "CopyFromBlobToBlob2",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "SqlSource",
+									"sqlReaderQuery": "select * from ventes"
+								},
+								"sink": {
+									"type": "BlobSink"
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"Budget": "Budget",
+										"Date_facture": "Date_facture",
+										"Type_Vente": "Type_Vente",
+										"CA": "CA",
+										"Client_FK": "Client_FK"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dbo_Ventes_i_ojw",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureBlob2",
+									"type": "DatasetReference",
+									"parameters": {
+										"path": "@pipeline().parameters.outputPath2"
+									}
+								}
+							]
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "CopyFromBlobToBlob1",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "SqlSource",
+									"sqlReaderQuery": "select * from ventes"
+								},
+								"sink": {
+									"type": "BlobSink"
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"Budget": "Budget",
+										"Date_facture": "Date_facture",
+										"Type_Vente": "Type_Vente",
+										"CA": "CA",
+										"Client_FK": "Client_FK"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dbo_Ventes_i_ojw",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureBlob2",
+									"type": "DatasetReference",
+									"parameters": {
+										"path": "@pipeline().parameters.outputPath1"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"outputPath1": {
+				"type": "String"
+			},
+			"outputPath2": {
+				"type": "String"
+			},
+			"routeSelection": {
+				"type": "String"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

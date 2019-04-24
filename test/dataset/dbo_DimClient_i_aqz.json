@@ -1,0 +1,64 @@
+{
+	"name": "dbo_DimClient_i_aqz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Client_PK",
+				"type": "Int32"
+			},
+			{
+				"name": "GeographieClient_FK",
+				"type": "Int32"
+			},
+			{
+				"name": "ClientCode",
+				"type": "String"
+			},
+			{
+				"name": "Client",
+				"type": "String"
+			},
+			{
+				"name": "TypeClient",
+				"type": "String"
+			},
+			{
+				"name": "SegmentationClient",
+				"type": "String"
+			},
+			{
+				"name": "lettre UNICODE",
+				"type": "String"
+			},
+			{
+				"name": "Lettre ASCII",
+				"type": "String"
+			},
+			{
+				"name": "datedebut",
+				"type": "DateTime"
+			},
+			{
+				"name": "datefin",
+				"type": "DateTime"
+			},
+			{
+				"name": "currentrow",
+				"type": "Int32"
+			},
+			{
+				"name": "lastupdate",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[DimClient]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,52 @@
+{
+	"name": "AzureBlob2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"path": {
+				"type": "String"
+			}
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Client_FK"
+			},
+			{
+				"name": "CA"
+			},
+			{
+				"name": "Budget"
+			},
+			{
+				"name": "Date_facture"
+			},
+			{
+				"name": "Type_Vente"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"fileName": {
+				"value": "@CONCAT(pipeline().RunId, '.txt')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@{dataset().path}",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

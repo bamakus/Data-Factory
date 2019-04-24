@@ -1,0 +1,40 @@
+{
+	"name": "dbo_Ventes_i_aqz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Client_FK",
+				"type": "Int32"
+			},
+			{
+				"name": "CA",
+				"type": "Decimal"
+			},
+			{
+				"name": "Budget",
+				"type": "Decimal"
+			},
+			{
+				"name": "Date_facture",
+				"type": "DateTime"
+			},
+			{
+				"name": "Type_Vente",
+				"type": "String"
+			},
+			{
+				"name": "Type_Vente_FK",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[Ventes]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
