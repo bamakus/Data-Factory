@@ -39,8 +39,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob1",
-						"type": "DatasetReference"
+						"referenceName": "AzureBlob2",
+						"type": "DatasetReference",
+						"parameters": {
+							"path": "\n@pipeline().parameters.sinkBlobContainer"
+						}
 					}
 				]
 			},
