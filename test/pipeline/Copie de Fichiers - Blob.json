@@ -4,7 +4,7 @@
 		"description": "https://hk.saowen.com/a/2a1ceb923605903a033b4b0d988068987720d1c9324cb285f76acfae564f65b1",
 		"activities": [
 			{
-				"name": "Liste_des_fichiers3",
+				"name": "Liste_des_fichiers",
 				"type": "GetMetadata",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -28,7 +28,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Liste_des_fichiers3",
+						"activity": "Liste_des_fichiers",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -76,7 +76,7 @@
 							"type": "SetVariable",
 							"typeProperties": {
 								"variableName": "resultat",
-								"value": "KO"
+								"value": "OK"
 							}
 						}
 					]
