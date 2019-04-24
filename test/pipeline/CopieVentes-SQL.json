@@ -30,13 +30,13 @@
 							"CA": "CA",
 							"Budget": "Budget",
 							"Date_facture": "Date_facture",
-							"Type_Vente": "Type_Vente_FK"
+							"Type_Vente_FK": "Type_Vente_FK"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "dbo_Ventes_i_ojw",
+						"referenceName": "dbo_Ventes_i_aqz",
 						"type": "DatasetReference"
 					}
 				],
