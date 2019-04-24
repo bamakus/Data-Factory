@@ -14,7 +14,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from [dbo].[Ventes] where [Date_facture] >= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' AND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd, 'yyyy-MM-dd HH:mm' )}'",
+							"value": "select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK from [dbo].[Ventes] A \nLeft JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente \nwhere [Date_facture] \n>= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd,\n 'yyyy-MM-dd HH:mm' )}'",
 							"type": "Expression"
 						}
 					},
@@ -29,7 +29,8 @@
 							"Client_FK": "Client_FK",
 							"CA": "CA",
 							"Budget": "Budget",
-							"Date_facture": "Date_facture"
+							"Date_facture": "Date_facture",
+							"Type_Vente": "Type_Vente_FK"
 						}
 					}
 				},
