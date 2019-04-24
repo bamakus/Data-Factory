@@ -29,8 +29,7 @@
 							"Client_FK": "Client_FK",
 							"CA": "CA",
 							"Budget": "Budget",
-							"Date_facture": "Date_facture",
-							"Type_Vente": "Type_Vente_FK"
+							"Date_facture": "Date_facture"
 						}
 					}
 				},
