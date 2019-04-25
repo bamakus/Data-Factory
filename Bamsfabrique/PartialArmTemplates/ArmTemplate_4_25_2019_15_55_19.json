@@ -1,0 +1,79 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "Bamsfabrique"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CopieVentes-SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy-dbo_Ventes",
+						"description": "Test",
+						"type": "Copy",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK from [dbo].[Ventes] A \nLeft JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente \nwhere [Date_facture] \n>= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd,\n 'yyyy-MM-dd HH:mm' )}'",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Client_FK": "Client_FK",
+									"CA": "CA",
+									"Budget": "Budget",
+									"Date_facture": "Date_facture",
+									"Type_Vente_FK": "Type_Vente_FK"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_Ventes_i_aqz",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dbo_Ventes_o_ojw",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				}
+			}
+		}
+	]
+}
