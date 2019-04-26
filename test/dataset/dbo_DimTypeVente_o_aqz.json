@@ -14,6 +14,18 @@
 			{
 				"name": "Type_Vente",
 				"type": "String"
+			},
+			{
+				"name": "Note",
+				"type": "Int32"
+			},
+			{
+				"name": "Date_Creation",
+				"type": "DateTime"
+			},
+			{
+				"name": "Date_Modification",
+				"type": "DateTime"
 			}
 		],
 		"typeProperties": {
