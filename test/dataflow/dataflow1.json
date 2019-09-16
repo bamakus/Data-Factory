@@ -1,0 +1,20 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"script": "\n\nsource(output(\n\t\tClient_PK as integer,\n\t\tClientCode as string,\n\t\tClient as string,\n\t\tTypeClient as string,\n\t\tSegmentationClient as string,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp,\n\t\tIsRowCurrent as integer,\n\t\tLastUpdated as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1"
+		}
+	}
+}
