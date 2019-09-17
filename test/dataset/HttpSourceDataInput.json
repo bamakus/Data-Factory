@@ -1,0 +1,20 @@
+{
+	"name": "HttpSourceDataInput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
