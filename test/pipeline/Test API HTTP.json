@@ -25,27 +25,7 @@
 					"sink": {
 						"type": "BlobSink"
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['id']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['titre']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['contenu']"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
