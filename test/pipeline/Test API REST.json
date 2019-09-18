@@ -35,7 +35,10 @@
 				"outputs": [
 					{
 						"referenceName": "AzureBlob3",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "rest_http.txt"
+						}
 					}
 				]
 			}
