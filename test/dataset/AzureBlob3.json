@@ -5,6 +5,11 @@
 			"referenceName": "AzureBlob",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureBlob",
 		"typeProperties": {
@@ -17,7 +22,10 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": false
 			},
-			"fileName": "json_http.txt",
+			"fileName": {
+				"value": "@dataset().filename",
+				"type": "Expression"
+			},
 			"folderPath": "adfv2branch"
 		}
 	},
