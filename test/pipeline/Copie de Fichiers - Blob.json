@@ -6,6 +6,7 @@
 			{
 				"name": "Liste_des_fichiers",
 				"type": "GetMetadata",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -13,10 +14,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "AzureBlob3",
-						"type": "DatasetReference"
+						"referenceName": "AzureBlob4",
+						"type": "DatasetReference",
+						"parameters": {
+							"path": "sinkBlobContainer"
+						}
 					},
 					"fieldList": [
 						"childItems"
@@ -34,6 +39,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@activity('Liste_des_fichiers').output.childitems",
@@ -43,6 +49,8 @@
 						{
 							"name": "Append Variable1",
 							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
 							"typeProperties": {
 								"variableName": "var_file_list",
 								"value": {
@@ -65,6 +73,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@variables('var_file_list')",
@@ -74,6 +83,8 @@
 						{
 							"name": "Set Variable1",
 							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
 							"typeProperties": {
 								"variableName": "resultat",
 								"value": "OK"
@@ -85,7 +96,8 @@
 		],
 		"parameters": {
 			"sinkBlobContainer": {
-				"type": "String"
+				"type": "string",
+				"defaultValue": "adfv2branch"
 			}
 		},
 		"variables": {
@@ -96,7 +108,8 @@
 				"type": "String",
 				"defaultValue": "KO"
 			}
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
