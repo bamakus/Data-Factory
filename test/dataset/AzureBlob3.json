@@ -5,6 +5,7 @@
 			"referenceName": "AzureBlob",
 			"type": "LinkedServiceReference"
 		},
+		"annotations": [],
 		"type": "AzureBlob",
 		"typeProperties": {
 			"format": {
@@ -16,6 +17,7 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": false
 			},
+			"fileName": "json_http.txt",
 			"folderPath": "adfv2branch"
 		}
 	},

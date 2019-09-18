@@ -55,11 +55,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob2",
-						"type": "DatasetReference",
-						"parameters": {
-							"path": "adfv2branch"
-						}
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference"
 					}
 				]
 			}
