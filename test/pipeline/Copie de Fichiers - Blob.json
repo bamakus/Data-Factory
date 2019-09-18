@@ -20,7 +20,7 @@
 						"referenceName": "AzureBlob4",
 						"type": "DatasetReference",
 						"parameters": {
-							"path": "sinkBlobContainer"
+							"path": "@pipeline().parameters.sinkBlobContainer"
 						}
 					},
 					"fieldList": [
