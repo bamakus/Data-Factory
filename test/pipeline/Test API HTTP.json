@@ -25,7 +25,27 @@
 					"sink": {
 						"type": "BlobSink"
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['titre']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['contenu']"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
@@ -35,8 +55,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
-						"type": "DatasetReference"
+						"referenceName": "AzureBlob2",
+						"type": "DatasetReference",
+						"parameters": {
+							"path": "adfv2branch"
+						}
 					}
 				]
 			}
