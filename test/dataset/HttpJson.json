@@ -1,0 +1,16 @@
+{
+	"name": "HttpJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
