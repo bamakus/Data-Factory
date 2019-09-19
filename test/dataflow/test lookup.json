@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Produits",
+						"referenceName": "Produits2",
 						"type": "DatasetReference"
 					},
 					"name": "source"
 				},
 				{
 					"dataset": {
-						"referenceName": "Produits2",
+						"referenceName": "Produits",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
