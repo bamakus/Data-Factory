@@ -20,6 +20,11 @@
 		},
 		"schema": [
 			{
+				"name": "Produit",
+				"type": "String"
+			},
+			{
+				"name": "Couleur",
 				"type": "String"
 			}
 		]
