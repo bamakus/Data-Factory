@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "mycontainer"
+				"fileName": "factures.csv",
+				"container": "adfv2branch"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
