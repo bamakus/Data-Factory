@@ -14,20 +14,23 @@
 			},
 			{
 				"name": "col2",
-				"type": "nvarchar"
+				"type": "int",
+				"precision": 10
 			},
 			{
 				"name": "col3",
-				"type": "nvarchar"
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
 			},
 			{
 				"name": "col4",
-				"type": "nvarchar"
+				"type": "date"
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "DTF2_Test_Conversion_I"
+			"table": "DTF2_Test_Conversion_O"
 		}
 	}
 }
