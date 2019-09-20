@@ -1,0 +1,33 @@
+{
+	"name": "SqlServerTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "col1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "col2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "col3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "col4",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DTF2_Test_Conversion_I"
+		}
+	}
+}
