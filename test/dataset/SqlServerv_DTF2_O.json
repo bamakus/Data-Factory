@@ -1,5 +1,5 @@
 {
-	"name": "SqlServerv_DTF2_I",
+	"name": "SqlServerv_DTF2_O",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServer1",
