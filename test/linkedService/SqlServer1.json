@@ -2,11 +2,12 @@
 	"name": "SqlServer1",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=60664HPV121112\\INSTANCESQL;initial catalog=Source_Test_azure",
 			"userName": "MONSERVEUR\\Administrator",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiNWFmMTA5MC1mOTZiLTQ5YWQtYWYxYi01NDA4MmJlNWZlMDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZDVmMGQ2ZS0wODM1LTQyODItYjVhNi0wZWY5M2NhYmMwM2QiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "integrationRuntime2",
