@@ -1,6 +1,87 @@
 {
-	"name": "pipeline1",
+	"name": "Test_Conversion_Types",
 	"properties": {
+		"activities": [
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "col1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "col1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "col2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "col2",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "col3",
+									"type": "String"
+								},
+								"sink": {
+									"name": "col3",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "col4",
+									"type": "String"
+								},
+								"sink": {
+									"name": "col4",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SqlServerv_DTF2_I",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SqlServerv_DTF2_O",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
 		"annotations": []
 	}
 }
