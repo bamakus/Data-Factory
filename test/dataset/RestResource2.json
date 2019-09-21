@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "https://jsonplaceholder.typicode.com/posts?userId=1"
+				"relativeUrl": "/posts?userId=1"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
