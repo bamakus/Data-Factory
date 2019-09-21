@@ -16,33 +16,29 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "JsonSource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"tableOption": "autoCreate"
+						"type": "BlobSink"
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResource2",
+						"referenceName": "HttpJson2",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Table_target",
+						"referenceName": "AzureBlob3",
 						"type": "DatasetReference",
 						"parameters": {
-							"DWTableName": "dbo.TEST_API"
+							"filename": "json_http2.csv"
 						}
 					}
 				]
