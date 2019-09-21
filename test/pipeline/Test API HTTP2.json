@@ -68,7 +68,8 @@
 						"recursive": true
 					},
 					"sink": {
-						"type": "BlobSink"
+						"type": "AzureSqlSink",
+						"tableOption": "autoCreate"
 					},
 					"enableStaging": false
 				},
@@ -83,11 +84,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "json_http2.csv"
-						}
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
 					}
 				]
 			}
