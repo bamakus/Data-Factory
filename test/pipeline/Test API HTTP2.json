@@ -3,7 +3,48 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data",
+				"name": "Copy data API",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "HttpJson2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "json_http2.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data SQL",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
