@@ -71,7 +71,66 @@
 						"type": "AzureSqlSink",
 						"tableOption": "autoCreate"
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"sink": {
+									"name": "Client_PK",
+									"type": "int"
+								}
+							},
+							{
+								"sink": {
+									"name": "ClientCode",
+									"type": "varchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "Client",
+									"type": "varchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "TypeClient",
+									"type": "varchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "SegmentationClient",
+									"type": "varchar"
+								}
+							},
+							{
+								"sink": {
+									"name": "DateDebut",
+									"type": "datetime"
+								}
+							},
+							{
+								"sink": {
+									"name": "DateFin",
+									"type": "datetime"
+								}
+							},
+							{
+								"sink": {
+									"name": "IsRowCurrent",
+									"type": "int"
+								}
+							},
+							{
+								"sink": {
+									"name": "LastUpdated",
+									"type": "datetime"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{

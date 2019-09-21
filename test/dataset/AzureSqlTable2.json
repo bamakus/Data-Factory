@@ -7,52 +7,7 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [
-			{
-				"name": "Client_PK",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "ClientCode",
-				"type": "varchar"
-			},
-			{
-				"name": "Client",
-				"type": "varchar"
-			},
-			{
-				"name": "TypeClient",
-				"type": "varchar"
-			},
-			{
-				"name": "SegmentationClient",
-				"type": "varchar"
-			},
-			{
-				"name": "DateDebut",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			},
-			{
-				"name": "DateFin",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			},
-			{
-				"name": "IsRowCurrent",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "LastUpdated",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			}
-		],
+		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
 			"table": "Test_REST"
