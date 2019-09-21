@@ -12,7 +12,7 @@
 				"type": "HttpServerLocation",
 				"relativeUrl": "/posts?userId=1"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
