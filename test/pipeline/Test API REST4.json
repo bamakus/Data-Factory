@@ -16,10 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "JsonSource",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
@@ -30,7 +33,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HttpJson2",
+						"referenceName": "RestResource2",
 						"type": "DatasetReference"
 					}
 				],
