@@ -1,0 +1,17 @@
+{
+	"name": "HttpJson2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/posts?userId=1"
+			}
+		}
+	}
+}

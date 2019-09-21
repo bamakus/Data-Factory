@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "ParquetSource",
+						"type": "JsonSource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
@@ -30,7 +30,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Parquet1",
+						"referenceName": "HttpJson2",
 						"type": "DatasetReference"
 					}
 				],
