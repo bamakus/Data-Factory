@@ -1,0 +1,61 @@
+{
+	"name": "Test API REST4",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "RestResource2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Table_target",
+						"type": "DatasetReference",
+						"parameters": {
+							"DWTableName": "dbo.TEST_API"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"token": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Http"
+		},
+		"annotations": []
+	}
+}
