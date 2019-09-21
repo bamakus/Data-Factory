@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Test API HTTP ",
+				"name": "Test API REST2",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
