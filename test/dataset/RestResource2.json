@@ -13,7 +13,6 @@
 				"relativeUrl": "/posts?userId=1"
 			},
 			"columnDelimiter": "",
-			"rowDelimiter": "\r",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
