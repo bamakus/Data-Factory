@@ -33,7 +33,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "RestResource2",
 						"type": "DatasetReference"
 					}
 				],

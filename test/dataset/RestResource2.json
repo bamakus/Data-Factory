@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "RestResource2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HttpServer1",
