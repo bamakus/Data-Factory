@@ -35,11 +35,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Table_target",
-						"type": "DatasetReference",
-						"parameters": {
-							"DWTableName": "dbo.TEST_API"
-						}
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
 					}
 				]
 			}
