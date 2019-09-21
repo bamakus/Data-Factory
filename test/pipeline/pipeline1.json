@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data1",
+				"name": "Test API HTTP ",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -48,6 +48,9 @@
 			"token": {
 				"type": "string"
 			}
+		},
+		"folder": {
+			"name": "Http"
 		},
 		"annotations": []
 	}
