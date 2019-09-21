@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Test API REST2",
 	"properties": {
 		"activities": [
 			{
-				"name": "Test API REST2",
+				"name": "Copy data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
