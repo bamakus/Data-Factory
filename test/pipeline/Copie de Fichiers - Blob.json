@@ -109,7 +109,9 @@
 				"defaultValue": "KO"
 			}
 		},
-		"annotations": []
+		"annotations": [
+			"Bamus"
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
