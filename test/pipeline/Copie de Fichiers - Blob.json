@@ -16,7 +16,8 @@
 				},
 				"userProperties": [
 					{
-						"name": "toto"
+						"name": "info",
+						"value": "tot"
 					}
 				],
 				"typeProperties": {
