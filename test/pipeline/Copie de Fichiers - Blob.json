@@ -14,7 +14,11 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "toto"
+					}
+				],
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "AzureBlob4",
