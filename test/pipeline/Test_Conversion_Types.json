@@ -1,6 +1,7 @@
 {
 	"name": "Test_Conversion_Types",
 	"properties": {
+		"description": "Conversion Auto \nnvarchar --> int ou num ou date\nErreur si typage incorrect",
 		"activities": [
 			{
 				"name": "Copy Data1",
@@ -19,7 +20,8 @@
 						"type": "SqlServerSource"
 					},
 					"sink": {
-						"type": "SqlServerSink"
+						"type": "SqlServerSink",
+						"preCopyScript": "truncate table dbo.DTF2_Test_Conversion_O"
 					},
 					"enableStaging": false,
 					"translator": {
