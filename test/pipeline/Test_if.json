@@ -1,10 +1,13 @@
 {
 	"name": "Test_if",
 	"properties": {
+		"description": "Test_if",
 		"activities": [
 			{
 				"name": "MyIfCondition",
 				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
 				"typeProperties": {
 					"expression": {
 						"value": "@bool(pipeline().parameters.routeSelection)",
@@ -14,12 +17,14 @@
 						{
 							"name": "CopyFromBlobToBlob2",
 							"type": "Copy",
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false
 							},
+							"userProperties": [],
 							"typeProperties": {
 								"source": {
 									"type": "SqlSource",
@@ -62,12 +67,14 @@
 						{
 							"name": "CopyFromBlobToBlob1",
 							"type": "Copy",
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false
 							},
+							"userProperties": [],
 							"typeProperties": {
 								"source": {
 									"type": "SqlSource",
@@ -119,7 +126,8 @@
 			"routeSelection": {
 				"type": "String"
 			}
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
