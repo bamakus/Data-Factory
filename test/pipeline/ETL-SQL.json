@@ -173,6 +173,11 @@
 				"type": "string"
 			}
 		},
+		"variables": {
+			"NomBase": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
