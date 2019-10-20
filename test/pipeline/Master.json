@@ -50,6 +50,10 @@
 						"windowEnd": {
 							"value": "@{activity('Lookup1').output.firstRow.datefin}",
 							"type": "Expression"
+						},
+						"NomBase": {
+							"value": "@variables('NomBase')",
+							"type": "Expression"
 						}
 					}
 				}
