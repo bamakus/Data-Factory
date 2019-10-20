@@ -168,6 +168,9 @@
 			},
 			"windowEnd": {
 				"type": "String"
+			},
+			"NomBase": {
+				"type": "string"
 			}
 		},
 		"annotations": []
