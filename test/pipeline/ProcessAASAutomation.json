@@ -23,6 +23,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Azure AS"
+		},
 		"annotations": []
 	}
 }
