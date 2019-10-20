@@ -1,5 +1,5 @@
 {
-	"name": "trigger1",
+	"name": "Trigger avec param",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -8,6 +8,16 @@
 				"pipelineReference": {
 					"referenceName": "Copie de Fichiers - Blob",
 					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "CopieVentes-Blob",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sinkBlobContainer": "adfv2branch",
+					"receiver": "chrisherv@gmail.com"
 				}
 			}
 		],
