@@ -1,0 +1,22 @@
+{
+	"name": "ProcessAASAutomation",
+	"properties": {
+		"activities": [
+			{
+				"name": "WebHook1",
+				"type": "WebHook",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://s9events.azure-automation.net/webhooks?token=yqimwu2V0%2fWuk6b24fkOhBKW6Mos0%2fbG%2fBwCw%2fFVLnI%3d",
+					"method": "POST",
+					"body": {
+						"message": "hello world"
+					},
+					"timeout": "00:10:00"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
