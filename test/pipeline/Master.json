@@ -52,7 +52,7 @@
 							"type": "Expression"
 						},
 						"NomBase": {
-							"value": "@variables('NomBase')",
+							"value": "@pipeline().parameters.NomBase",
 							"type": "Expression"
 						}
 					}
@@ -62,11 +62,6 @@
 		"parameters": {
 			"NomBase": {
 				"type": "string"
-			}
-		},
-		"variables": {
-			"NomBase": {
-				"type": "String"
 			}
 		},
 		"annotations": []
