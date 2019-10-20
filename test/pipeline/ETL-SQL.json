@@ -5,11 +5,13 @@
 			{
 				"name": "Copy-dbo_DimClient",
 				"type": "Copy",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -67,6 +69,7 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -125,6 +128,7 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource"
@@ -165,7 +169,8 @@
 			"windowEnd": {
 				"type": "String"
 			}
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

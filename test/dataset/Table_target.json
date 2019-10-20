@@ -3,11 +3,20 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"NomBase": {
+					"value": "@dataset().NomBase",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"DWTableName": {
 				"type": "String"
+			},
+			"NomBase": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
