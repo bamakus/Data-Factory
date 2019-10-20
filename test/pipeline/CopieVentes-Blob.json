@@ -40,10 +40,13 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob2",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "aaa.txt"
+							"path": {
+								"value": "@pipeline().parameters.sinkBlobContainer",
+								"type": "Expression"
+							}
 						}
 					}
 				]
