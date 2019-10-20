@@ -59,6 +59,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"NomBase": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"NomBase": {
 				"type": "String"
