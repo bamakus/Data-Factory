@@ -1,0 +1,28 @@
+{
+	"name": "trigger2",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ETL-SQL",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": "20/10/2019",
+					"windowEnd": "20/10/2019"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2019-10-20T12:22:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
