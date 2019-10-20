@@ -117,7 +117,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"NomBase": {
-								"value": "@variables('NomBase')",
+								"value": "@pipeline().parameters.NomBase",
 								"type": "Expression"
 							}
 						}
@@ -173,7 +173,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"NomBase": {
-								"value": "@variables('NomBase')",
+								"value": "@pipeline().parameters.NomBase",
 								"type": "Expression"
 							}
 						}
