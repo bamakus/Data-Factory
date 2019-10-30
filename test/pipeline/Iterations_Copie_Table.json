@@ -13,6 +13,7 @@
 						"value": "@pipeline().parameters.tableList",
 						"type": "Expression"
 					},
+					"batchCount": 5,
 					"activities": [
 						{
 							"name": "Copy1",
