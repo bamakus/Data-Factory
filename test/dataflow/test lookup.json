@@ -23,9 +23,15 @@
 			"transformations": [
 				{
 					"name": "Lookup1"
+				},
+				{
+					"name": "Select1"
+				},
+				{
+					"name": "Aggregate1"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource, source1 lookup(source@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1"
+			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nAggregate1, source1 lookup(source@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1\nLookup1 select(mapColumn(\n\t\t{Produit maj} = source1@Produit,\n\t\t{Couleur maj} = Couleur,\n\t\t{Produit filtre} = source@Produit\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tProduit = ERROR_FUNCTION('')) ~> Aggregate1"
 		}
 	}
 }
