@@ -43,9 +43,12 @@
 				},
 				{
 					"name": "Join1"
+				},
+				{
+					"name": "Filter1"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource, source1 lookup(source@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1\nLookup1 select(mapColumn(\n\t\t{Produit Filtre} = source@Produit,\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 keyGenerate(output(SGK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 aggregate(groupBy({Produit Filtre}),\n\twinner = last(SGK)) ~> Distinct\nSurrogateKey1, Distinct join(concat(Select1@{Produit Filtre} ,toString(SGK)) == concat(Distinct@{Produit Filtre},toString(winner)),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1\nJoin1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
+			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource, source1 lookup(source@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1\nLookup1 select(mapColumn(\n\t\t{Produit Filtre} = source@Produit,\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nFilter1 keyGenerate(output(SGK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 aggregate(groupBy({Produit Filtre}),\n\twinner = last(SGK)) ~> Distinct\nSurrogateKey1, Distinct join(concat(Select1@{Produit Filtre} ,toString(SGK)) == concat(Distinct@{Produit Filtre},toString(winner)),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1\nSelect1 filter(!isNull({Produit Filtre})) ~> Filter1\nJoin1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
 		}
 	}
 }
