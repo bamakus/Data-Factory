@@ -39,13 +39,10 @@
 					"name": "Aggregate1"
 				},
 				{
-					"name": "Filter1"
-				},
-				{
 					"name": "Filter2"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nAggregate1, source1 lookup(Aggregate1@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1\nFilter2 select(mapColumn(\n\t\t{Produit  Filtre} = Aggregate1@Produit,\n\t\tcomptage,\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tcomptage = count(Produit)) ~> Aggregate1\nSelect1 filter(ERROR_FUNCTION('')) ~> Filter1\nLookup1 filter(!isNull(source1@Produit) &&comptage == 1) ~> Filter2\nFilter1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
+			"script": "\n\nsource(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nAggregate1, source1 lookup(Aggregate1@Produit == source1@Produit,\n\tbroadcast: 'none')~> Lookup1\nFilter2 select(mapColumn(\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tcomptage = count(Produit)) ~> Aggregate1\nLookup1 filter(!isNull(source1@Produit) &&comptage == 1) ~> Filter2\nSelect1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
 		}
 	}
 }
