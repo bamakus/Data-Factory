@@ -6,15 +6,9 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"NomBase": {
-					"value": "@dataset().NomBase",
+					"value": "MaBase",
 					"type": "Expression"
 				}
-			}
-		},
-		"parameters": {
-			"NomBase": {
-				"type": "string",
-				"defaultValue": "MaBase"
 			}
 		},
 		"annotations": [],
