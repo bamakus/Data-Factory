@@ -1,0 +1,35 @@
+{
+	"name": "Test SQL UPSERT",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Produits",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Window1"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource1 window(over(Produit),\n\tasc(Couleur, true),\n\tRank = denseRank(Couleur)) ~> Window1\nWindow1 alterRow(insertIf(!isNull(Produit))) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tkeys:['Produit'],\n\trecreate:true,\n\tformat: 'table') ~> sink1"
+		}
+	}
+}
