@@ -13,7 +13,8 @@
 		},
 		"parameters": {
 			"NomBase": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "MaBase"
 			}
 		},
 		"annotations": [],
