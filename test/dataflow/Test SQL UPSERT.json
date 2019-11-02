@@ -9,14 +9,14 @@
 						"referenceName": "Produits",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "source"
 				},
 				{
 					"dataset": {
 						"referenceName": "AzureSqlTable3",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "target"
 				}
 			],
 			"sinks": [
@@ -39,7 +39,7 @@
 					"name": "Join1"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source2\nJoin1 window(over(source1@Produit),\n\tasc(source1@Couleur, true),\n\tRank = denseRank(source1@Couleur)) ~> Window1\nWindow1 alterRow(insertIf(!isNull(source1@Produit))) ~> AlterRow1\nsource1, source2 join(source1@Produit == ERROR_FUNCTION(''),\n\tjoinType:'left',\n\tbroadcast: 'none')~> Join1\nAlterRow1 sink(input(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:false,\n\tkeys:['Produit'],\n\trecreate:true,\n\tformat: 'table') ~> sink1"
+			"script": "\n\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> target\nJoin1 window(over(source@Produit),\n\tasc(source@Couleur, true),\n\tRank = denseRank(source@Couleur)) ~> Window1\nWindow1 alterRow(insertIf(!isNull(source@Produit) && isNull(target@Produit)),\n\tupdateIf(!isNull(source@Produit) && !isNull(target@Produit) && (source@Couleur != target@Couleur))) ~> AlterRow1\nsource, target join(source@Produit == target@Produit,\n\tjoinType:'left',\n\tbroadcast: 'none')~> Join1\nAlterRow1 sink(input(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['sink1@Produit'],\n\tformat: 'table') ~> sink1"
 		}
 	}
 }
