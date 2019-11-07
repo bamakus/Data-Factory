@@ -30,11 +30,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"NomBase": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
