@@ -1,0 +1,41 @@
+{
+	"name": "Master - Test Data Flow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Test Data Flow lookup",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"windowStart": {
+							"value": "@{activity('Lookup1').output.firstRow.datedeb}",
+							"type": "Expression"
+						},
+						"windowEnd": {
+							"value": "@{activity('Lookup1').output.firstRow.datefin}",
+							"type": "Expression"
+						},
+						"NomBase": {
+							"value": "@pipeline().parameters.NomBase",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"NomBase": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
