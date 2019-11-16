@@ -1,0 +1,28 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"description": "copie fichiers",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Copie de Fichiers - Blob",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sinkBlobContainer": "adfv2branch"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2019-11-16T12:27:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
