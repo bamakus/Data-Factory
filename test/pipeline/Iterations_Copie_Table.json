@@ -6,6 +6,8 @@
 			{
 				"name": "IterationTablesSQL",
 				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@pipeline().parameters.tableList",
@@ -15,11 +17,13 @@
 						{
 							"name": "Copy1",
 							"type": "Copy",
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
 								"retryIntervalInSeconds": 30
 							},
+							"userProperties": [],
 							"typeProperties": {
 								"source": {
 									"type": "SqlSource",
@@ -63,7 +67,8 @@
 			"tableList": {
 				"type": "Object"
 			}
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

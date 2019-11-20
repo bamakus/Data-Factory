@@ -20,7 +20,8 @@
 		],
 		"variables": {
 			"Mon_nom": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "Romeo"
 			}
 		},
 		"annotations": []

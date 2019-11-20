@@ -5,6 +5,7 @@
 			{
 				"name": "Copy1",
 				"type": "Copy",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -42,7 +43,10 @@
 						"referenceName": "AzureBlob2",
 						"type": "DatasetReference",
 						"parameters": {
-							"path": "\n@pipeline().parameters.sinkBlobContainer"
+							"path": {
+								"value": "@pipeline().parameters.sinkBlobContainer",
+								"type": "Expression"
+							}
 						}
 					}
 				]
@@ -63,6 +67,7 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"url": "https://prod-04.northeurope.logic.azure.com:443/workflows/aacb3517ccc4448caeabd027bef823f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c75baHOYmu-seRk18dxojF4Uu732zEpFUlTFHl3DzdU",
 					"method": "POST",
@@ -93,6 +98,7 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"url": "https://prod-00.northeurope.logic.azure.com:443/workflows/7bd654e9a315448bb4fee2d2586d3828/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Jv2oCPgGoW5RvJgqYAhx38KNWSBfTI3vEa--mug5emg",
 					"method": "POST",
@@ -115,7 +121,8 @@
 			"receiver": {
 				"type": "String"
 			}
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

@@ -1,27 +1,36 @@
 {
-	"name": "AzureSqlTable2",
+	"name": "AzureSqlTable3",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"NomBase": {
-					"value": "@dataset().NomBase",
+					"value": "MaBase",
 					"type": "Expression"
 				}
 			}
 		},
-		"parameters": {
-			"NomBase": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "Produit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Couleur",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Rank",
+				"type": "int",
+				"precision": 10
+			}
+		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Test_REST"
+			"table": "LesProduits"
 		}
 	}
 }

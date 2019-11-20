@@ -7,7 +7,7 @@
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=60664HPV121112\\INSTANCESQL;initial catalog=Source_Test_azure",
 			"userName": "MONSERVEUR\\Administrator",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZDVmMGQ2ZS0wODM1LTQyODItYjVhNi0wZWY5M2NhYmMwM2QiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwMWIyY2VlMy1lNTMxLTQ2ZjEtOTg3OC01NzhhZDA0MGNkNTciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "integrationRuntime2",

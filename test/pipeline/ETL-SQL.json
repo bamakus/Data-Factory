@@ -5,11 +5,13 @@
 			{
 				"name": "Copy-dbo_DimClient",
 				"type": "Copy",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -47,7 +49,13 @@
 				"outputs": [
 					{
 						"referenceName": "dbo_DimClient_o_aqz",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"NomBase": {
+								"value": "@pipeline().parameters.NomBase",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -67,6 +75,7 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -105,7 +114,13 @@
 				"outputs": [
 					{
 						"referenceName": "dbo_Ventes_o_aqz",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"NomBase": {
+								"value": "@pipeline().parameters.NomBase",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -125,9 +140,11 @@
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource"
+						"type": "SqlSource",
+						"sqlReaderQuery": "select * from DimTypeVente"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -153,7 +170,13 @@
 				"outputs": [
 					{
 						"referenceName": "dbo_DimTypeVente_o_aqz",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"NomBase": {
+								"value": "@pipeline().parameters.NomBase",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
@@ -164,8 +187,17 @@
 			},
 			"windowEnd": {
 				"type": "String"
+			},
+			"NomBase": {
+				"type": "string"
 			}
-		}
+		},
+		"variables": {
+			"NomBase": {
+				"type": "String"
+			}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

@@ -1,10 +1,10 @@
 {
-	"name": "ProcessAASAutomation",
+	"name": "Test Data Flow UPSERT",
 	"properties": {
 		"activities": [
 			{
-				"name": "Web1",
-				"type": "WebActivity",
+				"name": "Test SQL UPSERT",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,17 +15,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": "https://s9events.azure-automation.net/webhooks?token=yqimwu2V0%2fWuk6b24fkOhBKW6Mos0%2fbG%2fBwCw%2fFVLnI%3d",
-					"method": "POST",
-					"body": {
-						"message": "hello world"
+					"dataflow": {
+						"referenceName": "Test SQL UPSERT",
+						"type": "DataFlowReference"
 					}
 				}
 			}
 		],
-		"folder": {
-			"name": "Azure AS"
-		},
 		"annotations": []
 	}
 }

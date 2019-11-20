@@ -5,11 +5,13 @@
 			{
 				"name": "Lookup1",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -33,6 +35,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "ETL-SQL",
@@ -47,11 +50,21 @@
 						"windowEnd": {
 							"value": "@{activity('Lookup1').output.firstRow.datefin}",
 							"type": "Expression"
+						},
+						"NomBase": {
+							"value": "@pipeline().parameters.NomBase",
+							"type": "Expression"
 						}
 					}
 				}
 			}
-		]
+		],
+		"parameters": {
+			"NomBase": {
+				"type": "string"
+			}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
