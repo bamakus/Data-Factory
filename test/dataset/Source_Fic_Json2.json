@@ -1,0 +1,55 @@
+{
+	"name": "Source_Fic_Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"path": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "returnReference",
+				"type": "String"
+			},
+			{
+				"name": "orderReference",
+				"type": "String"
+			},
+			{
+				"name": "customerId",
+				"type": "Int64"
+			},
+			{
+				"name": "items",
+				"type": "String"
+			},
+			{
+				"name": "timestamp",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"jsonNodeReference": "$.['items']",
+				"jsonPathDefinition": {
+					"returnReference": "$.['returnReference']",
+					"orderReference": "$.['orderReference']",
+					"customerId": "$.['customerId']",
+					"items": "$.['items']",
+					"timestamp": "$.['timestamp']"
+				}
+			},
+			"fileName": "orders.json",
+			"folderPath": "adfv2branch"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
