@@ -32,6 +32,22 @@
 			{
 				"name": "timestamp",
 				"type": "String"
+			},
+			{
+				"name": "variantId",
+				"type": "Int64"
+			},
+			{
+				"name": "quantity",
+				"type": "Int64"
+			},
+			{
+				"name": "code",
+				"type": "Int64"
+			},
+			{
+				"name": "notes",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
@@ -44,7 +60,11 @@
 					"orderReference": "$.['orderReference']",
 					"customerId": "$.['customerId']",
 					"items": "$.['items']",
-					"timestamp": "$.['timestamp']"
+					"timestamp": "$.['timestamp']",
+					"variantId": "['variantId']",
+					"quantity": "['quantity']",
+					"code": "['returnReason']['code']",
+					"notes": "['returnReason']['notes']"
 				}
 			},
 			"fileName": "orders.json",
