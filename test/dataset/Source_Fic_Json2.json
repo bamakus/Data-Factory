@@ -5,11 +5,6 @@
 			"referenceName": "AzureBlob",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"path": {
-				"type": "String"
-			}
-		},
 		"annotations": [],
 		"type": "AzureBlob",
 		"structure": [
