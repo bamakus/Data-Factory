@@ -18,7 +18,7 @@
 				"columnDelimiter": ",",
 				"rowDelimiter": "",
 				"nullValue": {
-					"value": "concat('')",
+					"value": "''",
 					"type": "Expression"
 				},
 				"treatEmptyAsNull": true,
