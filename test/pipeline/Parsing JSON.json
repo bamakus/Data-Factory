@@ -46,7 +46,7 @@
 			},
 			{
 				"name": "Copy JSON2",
-				"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)\nGestion des colonnes non transmises",
+				"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)\nGestion des colonnes non transmises\nvia concat('')\nAttention pas de mapping à ce niveau",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
