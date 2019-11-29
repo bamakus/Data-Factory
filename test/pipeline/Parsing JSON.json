@@ -1,6 +1,7 @@
 {
 	"name": "Parsing JSON",
 	"properties": {
+		"description": "Test d'intégration de fichiers JSON\nAvec gestion de tags non transmis\nJSON2 semble parfait (gestion sous ensemble & tag non transmis)\nProcess API JSON --> fic json2 --> cible CSV ou SQL ",
 		"activities": [
 			{
 				"name": "Copy JSON1",
