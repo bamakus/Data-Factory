@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy JSON1",
-				"description": "Copie fic json --> CSV\nSans gestion tableaux",
+				"description": "Copie fic json --> CSV\nSans gestion tableaux (source json)\nPas de gestion des colonnes non transmises",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -46,7 +46,7 @@
 			},
 			{
 				"name": "Copy JSON2",
-				"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)",
+				"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)\nGestion des colonnes non transmises",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
