@@ -1,9 +1,9 @@
 {
-	"name": "Web Activity",
+	"name": "SFCC_One_Order_Staging",
 	"properties": {
 		"activities": [
 			{
-				"name": "SFCC_One_Order_Staging",
+				"name": "GET API Token",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
