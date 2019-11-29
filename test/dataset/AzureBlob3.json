@@ -17,7 +17,10 @@
 				"type": "TextFormat",
 				"columnDelimiter": ",",
 				"rowDelimiter": "",
-				"nullValue": "\\N",
+				"nullValue": {
+					"value": "concat('')",
+					"type": "Expression"
+				},
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
