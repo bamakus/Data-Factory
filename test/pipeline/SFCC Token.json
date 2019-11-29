@@ -1,5 +1,5 @@
 {
-	"name": "SFCC_One_Order_Staging",
+	"name": "SFCC Token",
 	"properties": {
 		"activities": [
 			{
@@ -36,6 +36,9 @@
 				"type": "string",
 				"defaultValue": "BoumEU2019!:Boum2019!"
 			}
+		},
+		"folder": {
+			"name": "Http"
 		},
 		"annotations": []
 	}
