@@ -1,0 +1,35 @@
+{
+	"name": "Outlook token",
+	"properties": {
+		"activities": [
+			{
+				"name": "GET API Token",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://login.microsoftonline.com/0d26a3f8-4ec1-4167-bdb5-1305046557b2/oauth2/v2.0/token",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "grant_type=authorization_code&code=OAQABAAIAAACQN9QBRU3jT6bcBQLZNUj7BFrFUsbb7AShLBpkboExGjQcyErFNVd5XDV2IqwjRH4UMTBA7I___TW3-McRfzXCRJWPUnYJf2U580zjD5pCbsh2gKZNhuuZeo3e3HBaDcYmMWGUAtaZ99jtgmHKl_vlZDDZEYK_nDrsp-rP6Wnxi0Po0vTp4WKB5lWKstKatHzD2zEpApClgSxWkg3zDaLBGFg6X5dKPZIfyGf_NzUUuZkiUFQXLQgcv67e00ct8Tw0OPn4UHu38C-aO0iua22_bDdoYbrzl2SJFh_gWjP4zw6drjGZLgBh_oiZaEXcQlt-6fnVsAhpLyYDrk9Xd9I3JqrB-qht-j21oYE0sHCx_7bwI-NSSw1Wh7IlP77Fn3PhB6_SUuNHgX0u9EUB580Odbm7li8bf_jo9nC0bEvq-SQsOy2rsvobtuAlOMkZxEvcIKAKv-k6GTbdHRuG_WZxRXNSiVB5LnKQekVX3SjRDmFPL9wq-Mnp1FlNzQxLz6_cnWAoCHeaUJazCz-jYU-jVUkuzy2OVEQU5YFB0WNK91iA5rA9DSEFeU50NEqbZ92bteLn_f1hAHOsnAi3NsmXInrlHOWBrH6ELIFw2nbtfMoXezDja5Kv68zagk8TnHG7gsM6tORmvPapg2upVxaGbBnXt5IXOAya3GHS_JEL38mgE5ZypYQi2s2Iaz_glsB1NMQmQW-BSY5oRwQ19AVyO1u_QKy5vwe_YPO5dIlB15PvBaVe8Oa9c-2E5RvuRRVYQrz4PCkeKvaZB2-8D_WFskkdx8ph-5bpshlL0C-Jd8xpTiFuptKg0KaTAkGsZqHUsUvefIzZ0aUB6TJnWXeAOq6My4gGHyVVuqtfokwfoesWetzmemFcm-gbavRTPPHM-UGrluLwWsUKWLemdjxplXlGRQWBhxPcbgZ2Eql7nS2KCL0ZaVMpfimJybZ_csfssXcsOsvbDCo7qqtaFB6YknQxYuka8SbLthlrZuyAv1R9qCYDXGKkSOmVa0LAbotYpGeaZQF1A82JJUgtE9plZYUn1d9brgltrAeR1v6krWuX85QQPji30DgryJWhx_-Dmu4M9BKr4hMMTYwrJG3-VDYgnNv1RBLGUqi70V9iu3N90sWzQ-7ILNdNp71q264-d4jv2Q4z5Uvi4gUaxtdhRrs3NW3Ta_fJRlbeAHQePLnTCe4MvN6VdaWU47ZfdtaOekXGiN6GOUDWT0g3NtGSIAA&session_state=cc8b588f-80bc-4aeb-8453-6b701bd99dfe&redirect_uri=https://login.microsoftonline.com/common/oauth2/nativeclient&client_id=01c0b191-65c5-4e0b-90a4-3015d2c5521f>&client_secret=8BbKJa_iZ4NCAmD.-o]CsHgUxdJQGH73",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Http"
+		},
+		"annotations": []
+	}
+}
