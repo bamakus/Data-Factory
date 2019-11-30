@@ -18,7 +18,15 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF-FactLoader1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"DimEmployee": {
+								"NomBase": "MaBase"
+							},
+							"writeFactTable": {
+								"NomBase": "MaBase"
+							}
+						}
 					}
 				}
 			}
