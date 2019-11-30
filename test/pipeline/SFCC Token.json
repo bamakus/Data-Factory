@@ -73,7 +73,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "login",
-					"value": "@activity('Recherche param').output.username"
+					"value": "@activity('Recherche param').output.firstRow.username"
 				}
 			},
 			{
@@ -91,7 +91,7 @@
 				"typeProperties": {
 					"variableName": "password",
 					"value": {
-						"value": "@activity('Recherche param').output.password",
+						"value": "@activity('Recherche param').output.firstRow.password",
 						"type": "Expression"
 					}
 				}
