@@ -54,7 +54,8 @@
 									"referenceName": "Table_target",
 									"type": "DatasetReference",
 									"parameters": {
-										"DWTableName": "[@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]"
+										"DWTableName": "[@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+										"NomBase": "MaBase"
 									}
 								}
 							]
