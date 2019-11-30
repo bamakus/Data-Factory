@@ -7,7 +7,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Recherche param",
+						"activity": "Set variable1_copy1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -58,6 +58,43 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Recherche param",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "login",
+					"value": "@activity('Recherche param').output.username"
+				}
+			},
+			{
+				"name": "Set variable1_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "password",
+					"value": {
+						"value": "@activity('Recherche param').output.password",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -68,6 +105,14 @@
 			"password": {
 				"type": "string",
 				"defaultValue": "BoumEU2019!:Boum2019!"
+			}
+		},
+		"variables": {
+			"login": {
+				"type": "String"
+			},
+			"password": {
+				"type": "String"
 			}
 		},
 		"folder": {
