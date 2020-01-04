@@ -1,6 +1,7 @@
 {
 	"name": "Test SQL UPSERT",
 	"properties": {
+		"description": "Alter row = qualification des lignes en input\n(Create = implicite) ",
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
