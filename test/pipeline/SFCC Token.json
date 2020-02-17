@@ -1,0 +1,123 @@
+{
+	"name": "SFCC Token",
+	"properties": {
+		"activities": [
+			{
+				"name": "GET API Token",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set variable1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://demo-eu01-happening.demandware.net/dw/oauth2/access_token?client_id=9c4123ef-c5ad-464c-83b5-0dd12282ef22&grant_type=urn:demandware:params:oauth:grant-type:client-id:dwsid:dwsecuretoken",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "username=@{pipeline().parameters.username}\n&password=@{pipeline().parameters.password}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Recherche param",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						}
+					},
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Recherche param",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "login",
+					"value": "@activity('Recherche param').output.firstRow.username"
+				}
+			},
+			{
+				"name": "Set variable1_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "password",
+					"value": {
+						"value": "@activity('Recherche param').output.firstRow.password",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"username": {
+				"type": "string",
+				"defaultValue": "admin"
+			},
+			"password": {
+				"type": "string",
+				"defaultValue": "BoumEU2019!:Boum2019!"
+			}
+		},
+		"variables": {
+			"login": {
+				"type": "String"
+			},
+			"password": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Http"
+		},
+		"annotations": []
+	}
+}

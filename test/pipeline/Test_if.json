@@ -1,6 +1,7 @@
 {
 	"name": "Test_if",
 	"properties": {
+		"description": "Test_if",
 		"activities": [
 			{
 				"name": "MyIfCondition",

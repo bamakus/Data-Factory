@@ -1,0 +1,90 @@
+{
+	"name": "Parsing JSON",
+	"properties": {
+		"description": "https://medium.com/@gary.strange/flattening-json-in-azure-data-factory-2f2130794258\n\nTest d'intégration de fichiers JSON\nAvec gestion de tags non transmis\nJSON2 semble parfait (gestion sous ensemble & tag non transmis)\nProcess API JSON --> fic json2 --> cible CSV (blanc)--> SQL ",
+		"activities": [
+			{
+				"name": "Copy JSON1",
+				"description": "Copie fic json --> CSV\nSans gestion tableaux (source json)\nPas de gestion des colonnes non transmises",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Source_Fic_Json1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "res_json1.csv"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy JSON2",
+				"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)\nGestion des colonnes non transmises\nvia concat('')\nAttention pas de mapping à ce niveau",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Source_Fic_Json2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "res_json2.csv"
+						}
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

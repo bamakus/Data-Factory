@@ -48,7 +48,7 @@
 						"referenceName": "dbo_Ventes_o_ojw",
 						"type": "DatasetReference",
 						"parameters": {
-							"NomBase": "MaBase"
+							"NomBase": "Mabase"
 						}
 					}
 				]
