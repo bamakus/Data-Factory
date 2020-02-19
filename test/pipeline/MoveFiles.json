@@ -1,7 +1,7 @@
 {
 	"name": "MoveFiles",
 	"properties": {
-		"description": "Move files from one folder to another folder",
+		"description": "Move files from one folder to another folder.",
 		"activities": [
 			{
 				"name": "GetFileList",

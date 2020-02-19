@@ -12,6 +12,7 @@
 		"connectVia": {
 			"referenceName": "integrationRuntime2",
 			"type": "IntegrationRuntimeReference"
-		}
+		},
+		"description": "B"
 	}
 }

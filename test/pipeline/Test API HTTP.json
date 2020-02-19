@@ -5,7 +5,14 @@
 			{
 				"name": "Copy Data1",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Viewer API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -42,8 +49,53 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Viewer API",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Fabrication URL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@variables('URL')",
+						"type": "Expression"
+					},
+					"method": "GET"
+				}
+			},
+			{
+				"name": "Fabrication URL",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "URL",
+					"value": {
+						"value": "@concat('https://oc-jswebsrv.herokuapp.com/api/','articles')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"URL": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Http"
 		},
