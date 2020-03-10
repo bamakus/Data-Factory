@@ -42,11 +42,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3_ABS",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "json_http.txt"
-						}
+						"referenceName": "Produit_Json_ABS",
+						"type": "DatasetReference"
 					}
 				]
 			},
