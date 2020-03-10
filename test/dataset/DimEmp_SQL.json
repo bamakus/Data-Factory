@@ -1,5 +1,5 @@
 {
-	"name": "DimEmp1",
+	"name": "DimEmp_SQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",

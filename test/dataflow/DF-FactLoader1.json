@@ -14,7 +14,7 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "DimEmp1",
+						"referenceName": "DimEmp_SQL",
 						"type": "DatasetReference"
 					},
 					"name": "DimEmployee"
@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "FactTable21",
+						"referenceName": "FactTable2_SQL",
 						"type": "DatasetReference"
 					},
 					"name": "writeFactTable"

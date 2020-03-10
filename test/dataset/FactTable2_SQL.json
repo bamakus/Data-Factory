@@ -1,5 +1,5 @@
 {
-	"name": "FactTable21",
+	"name": "FactTable2_SQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
