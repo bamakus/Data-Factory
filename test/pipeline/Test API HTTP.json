@@ -1,0 +1,152 @@
+{
+	"name": "Test API HTTP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Data- TXT",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Viewer API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "HttpJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "json_http.txt"
+						}
+					}
+				]
+			},
+			{
+				"name": "Viewer API",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Fabrication URL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@variables('URL')",
+						"type": "Expression"
+					},
+					"method": "GET"
+				}
+			},
+			{
+				"name": "Fabrication URL",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "URL",
+					"value": {
+						"value": "@concat('https://oc-jswebsrv.herokuapp.com/api/','articles')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy Data -  JSON",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Viewer API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "HttpJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "json_http.txt"
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"URL": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Http"
+		},
+		"annotations": []
+	}
+}
