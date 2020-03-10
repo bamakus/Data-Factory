@@ -1,5 +1,5 @@
 {
-	"name": "Produits2",
+	"name": "Produits2_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

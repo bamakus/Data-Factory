@@ -28,7 +28,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResource1",
+						"referenceName": "URL_Resource1_REST",
 						"type": "DatasetReference"
 					}
 				],

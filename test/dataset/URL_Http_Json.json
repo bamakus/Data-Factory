@@ -1,5 +1,5 @@
 {
-	"name": "HttpJson",
+	"name": "URL_Http_Json",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HttpLinkedService",

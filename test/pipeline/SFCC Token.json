@@ -54,7 +54,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Json1",
+						"referenceName": "Login_Json",
 						"type": "DatasetReference"
 					}
 				}
@@ -73,7 +73,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "login",
-					"value": "@activity('Recherche param').output.firstRow.username"
+					"value": {
+						"value": "@activity('Recherche param').output.firstRow.username",
+						"type": "Expression"
+					}
 				}
 			},
 			{

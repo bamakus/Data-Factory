@@ -1,5 +1,5 @@
 {
-	"name": "movie_dataflow_source1",
+	"name": "movie_dataflow_source1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

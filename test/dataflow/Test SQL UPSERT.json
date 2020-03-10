@@ -7,7 +7,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Produits",
+						"referenceName": "Produits_CSV",
 						"type": "DatasetReference"
 					},
 					"name": "source"
@@ -46,7 +46,7 @@
 					"name": "Select2"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> target\nJoin1 window(over(Produit = S_Produit),\n\tasc(S_Couleur, true),\n\tRank = denseRank()) ~> Window1\nWindow1 alterRow(updateIf(S_Couleur!=T_Couleur),\n\tdeleteIf(S_Couleur==T_Couleur)) ~> AlterRow1\nSelect1, Select2 join(S_Produit == T_Produit,\n\tjoinType:'left',\n\tbroadcast: 'none')~> Join1\nsource select(mapColumn(\n\t\tS_Produit = Produit,\n\t\tS_Couleur = Couleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\ntarget select(mapColumn(\n\t\tT_Produit = Produit,\n\t\tT_Couleur = Couleur,\n\t\tT_Rank = Rank\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nAlterRow1 sink(input(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['Produit'],\n\tformat: 'table',\n\tmapColumn(\n\t\tProduit = S_Produit,\n\t\tCouleur = S_Couleur,\n\t\tRank\n\t)) ~> sink1"
+			"script": "source(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> target\nJoin1 window(over(Produit = S_Produit),\n\tasc(S_Couleur, true),\n\tRank = denseRank()) ~> Window1\nWindow1 alterRow(updateIf(S_Couleur!=T_Couleur),\n\tdeleteIf(S_Couleur==T_Couleur)) ~> AlterRow1\nSelect1, Select2 join(S_Produit == T_Produit,\n\tjoinType:'left',\n\tbroadcast: 'none')~> Join1\nsource select(mapColumn(\n\t\tS_Produit = Produit,\n\t\tS_Couleur = Couleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\ntarget select(mapColumn(\n\t\tT_Produit = Produit,\n\t\tT_Couleur = Couleur,\n\t\tT_Rank = Rank\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nAlterRow1 sink(input(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['Produit'],\n\tformat: 'table',\n\tmapColumn(\n\t\tProduit = S_Produit,\n\t\tCouleur = S_Couleur,\n\t\tRank\n\t)) ~> sink1"
 		}
 	}
 }

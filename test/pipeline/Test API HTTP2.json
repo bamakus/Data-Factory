@@ -29,7 +29,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HttpJson2",
+						"referenceName": "URL_Http_Json2",
 						"type": "DatasetReference"
 					}
 				],
