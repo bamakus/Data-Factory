@@ -1,5 +1,5 @@
 {
-	"name": "CADOutput1",
+	"name": "CADOutput1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

@@ -1,5 +1,5 @@
 {
-	"name": "Facts1",
+	"name": "Factures_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

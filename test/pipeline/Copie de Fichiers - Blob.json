@@ -22,7 +22,7 @@
 				],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "AzureBlob4",
+						"referenceName": "AzureBlob_Folder_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"path": "@pipeline().parameters.sinkBlobContainer"

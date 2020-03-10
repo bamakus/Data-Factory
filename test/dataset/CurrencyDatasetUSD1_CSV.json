@@ -1,5 +1,5 @@
 {
-	"name": "CurrencyDatasetUSD1",
+	"name": "CurrencyDatasetUSD1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

@@ -1,5 +1,5 @@
 {
-	"name": "AzureBlobStorageDataSource_File",
+	"name": "AzureBlobStorageDataSource_File_ABS",
 	"properties": {
 		"description": "It describes the file in the data source store. ",
 		"linkedServiceName": {

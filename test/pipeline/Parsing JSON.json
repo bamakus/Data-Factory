@@ -37,7 +37,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "res_json1.csv"
@@ -76,7 +76,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "res_json2.csv"

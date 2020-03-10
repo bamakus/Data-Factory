@@ -1,5 +1,5 @@
 {
-	"name": "AzureBlob4",
+	"name": "AzureBlob_Folder_ABS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlob",

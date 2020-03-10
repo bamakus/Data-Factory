@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "AzureBlobStorageDataSource_Folder",
+						"referenceName": "AzureBlobStorageDataSource_Folder_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"FolderPath": {
@@ -78,7 +78,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "AzureBlobStorageDataSource_File",
+									"referenceName": "AzureBlobStorageDataSource_File_ABS",
 									"type": "DatasetReference",
 									"parameters": {
 										"path": {
@@ -94,7 +94,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureBlobStorageDataDestination",
+									"referenceName": "AzureBlobStorageDataDestination_File_ABS",
 									"type": "DatasetReference",
 									"parameters": {
 										"path": {
@@ -131,7 +131,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "AzureBlobStorageDataSource_File",
+									"referenceName": "AzureBlobStorageDataSource_File_ABS",
 									"type": "DatasetReference",
 									"parameters": {
 										"path": {
