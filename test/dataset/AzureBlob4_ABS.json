@@ -1,10 +1,11 @@
 {
-	"name": "SinkDataset",
+	"name": "AzureBlob4_ABS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlob",
 			"type": "LinkedServiceReference"
 		},
+		"annotations": [],
 		"type": "AzureBlob",
 		"typeProperties": {
 			"format": {
