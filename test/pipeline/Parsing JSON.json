@@ -31,7 +31,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_Fic_Json1",
+						"referenceName": "Orders_Json",
 						"type": "DatasetReference"
 					}
 				],
@@ -70,7 +70,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_Fic_Json2",
+						"referenceName": "Orders_Json_ABS",
 						"type": "DatasetReference"
 					}
 				],

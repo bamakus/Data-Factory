@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "USDOutput1",
+						"referenceName": "USDOutput1_CSV",
 						"type": "DatasetReference"
 					},
 					"name": "USDSink"

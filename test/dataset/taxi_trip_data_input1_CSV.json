@@ -1,5 +1,5 @@
 {
-	"name": "taxi_trip_data_input1",
+	"name": "taxi_trip_data_input1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

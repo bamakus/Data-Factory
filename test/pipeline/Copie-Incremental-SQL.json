@@ -5,19 +5,21 @@
 			{
 				"name": "LookupOldWaterMarkActivity",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": "select * from watermarktable"
 					},
 					"dataset": {
-						"referenceName": "WatermarkDataset",
+						"referenceName": "WatermarkDataset_SQL",
 						"type": "DatasetReference"
 					}
 				}
@@ -25,19 +27,21 @@
 			{
 				"name": "LookupNewWaterMarkActivity",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table"
 					},
 					"dataset": {
-						"referenceName": "SourceDataset",
+						"referenceName": "SourceDataset_SQL",
 						"type": "DatasetReference"
 					}
 				}
@@ -91,13 +95,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset",
+						"referenceName": "SourceDataset_SQL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SinkDataset",
+						"referenceName": "AzureBlob4_ABS",
 						"type": "DatasetReference"
 					}
 				]
@@ -119,6 +123,7 @@
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[dbo].[sp_write_watermark]",
 					"storedProcedureParameters": {
@@ -143,7 +148,8 @@
 					"type": "LinkedServiceReference"
 				}
 			}
-		]
+		],
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

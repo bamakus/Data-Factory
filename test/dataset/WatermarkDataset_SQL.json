@@ -1,10 +1,11 @@
 {
-	"name": "WatermarkDataset",
+	"name": "WatermarkDataset_SQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServer1",
 			"type": "LinkedServiceReference"
 		},
+		"annotations": [],
 		"type": "SqlServerTable",
 		"typeProperties": {
 			"tableName": "[dbo].[watermarktable]"

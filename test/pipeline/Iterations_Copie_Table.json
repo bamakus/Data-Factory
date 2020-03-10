@@ -45,13 +45,13 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Table_source",
+									"referenceName": "Table_source_SQL",
 									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "Table_target",
+									"referenceName": "Table_target_SQL",
 									"type": "DatasetReference",
 									"parameters": {
 										"DWTableName": "[@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",

@@ -1,5 +1,5 @@
 {
-	"name": "TaxiDemoDayStatsSink1",
+	"name": "TaxiDemoDayStatsSink1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

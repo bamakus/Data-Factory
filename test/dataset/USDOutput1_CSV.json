@@ -1,5 +1,5 @@
 {
-	"name": "USDOutput1",
+	"name": "USDOutput1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

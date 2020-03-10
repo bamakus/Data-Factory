@@ -1,5 +1,5 @@
 {
-	"name": "TaxiDemoTotalByPaymentType1",
+	"name": "TaxiDemoTotalByPaymentType1_CSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
