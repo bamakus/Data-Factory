@@ -118,7 +118,14 @@
 						}
 					},
 					"sink": {
-						"type": "BlobSink"
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings",
+							"quoteAllText": true
+						}
 					},
 					"enableStaging": false
 				},
@@ -130,11 +137,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "json_http.txt"
-						}
+						"referenceName": "Cible_Fic_Json",
+						"type": "DatasetReference"
 					}
 				]
 			}
