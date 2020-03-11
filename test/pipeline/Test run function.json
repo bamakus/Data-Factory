@@ -15,7 +15,11 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"method": "POST"
+					"functionName": "HttpTrigger1",
+					"method": "POST",
+					"body": {
+						"name": "Tata"
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureFunction1",
