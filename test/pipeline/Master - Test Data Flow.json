@@ -16,6 +16,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Flows"
+		},
 		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
