@@ -6,7 +6,7 @@
 		"type": "AzureFunction",
 		"typeProperties": {
 			"functionAppUrl": "https://bamakapp2.azurewebsites.net",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkJBTVNGQUJSSVFVRV9mZTE1MWMzMC0zY2QzLTRmZWUtODBhYi0zODIyZWJkZjA1ZmEiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkJBTVNGQUJSSVFVRV9jOWRiN2UzMS03ODc5LTQ0OGEtODExOS03MThjZGVkMmVlNzYiDQp9"
 		}
 	}
 }
