@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Test run function2",
 	"properties": {
 		"activities": [
 			{
-				"name": "Azure Function1",
+				"name": "Azure Function",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [],
 				"policy": {
@@ -27,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Functions"
+		},
 		"annotations": []
 	}
 }
