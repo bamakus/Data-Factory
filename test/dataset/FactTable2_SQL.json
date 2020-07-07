@@ -1,0 +1,26 @@
+{
+	"name": "FactTable2_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"NomBase": {
+					"value": "@dataset().NomBase",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"NomBase": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "dbo.FactTable2"
+		}
+	}
+}

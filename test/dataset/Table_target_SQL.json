@@ -1,0 +1,32 @@
+{
+	"name": "Table_target_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"NomBase": {
+					"value": "@dataset().NomBase",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DWTableName": {
+				"type": "String"
+			},
+			"NomBase": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"typeProperties": {
+			"tableName": {
+				"value": "@{dataset().DWTableName}",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "Produit_Json_ABS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects"
+			},
+			"fileName": "produit.json",
+			"folderPath": "adfv2branch"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

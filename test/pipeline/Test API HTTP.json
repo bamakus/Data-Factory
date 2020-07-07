@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data1",
+				"name": "Copy Data JSON",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -36,17 +36,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HttpJson",
+						"referenceName": "URL_Http_Json",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "json_http.txt"
-						}
+						"referenceName": "Produit_Json_ABS",
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -89,6 +86,54 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Copy Data TXT",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Viewer API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "URL_Http_Json",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob3_ABS",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "json_http.txt"
+						}
+					}
+				]
 			}
 		],
 		"variables": {

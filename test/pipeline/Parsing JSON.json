@@ -31,13 +31,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_Fic_Json1",
+						"referenceName": "Orders_Json",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "res_json1.csv"
@@ -70,13 +70,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_Fic_Json2",
+						"referenceName": "Orders_Json_ABS",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "res_json2.csv"
@@ -85,6 +85,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "Json"
+		},
 		"annotations": []
 	}
 }

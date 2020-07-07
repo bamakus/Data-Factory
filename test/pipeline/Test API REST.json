@@ -28,13 +28,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResource1",
+						"referenceName": "URL_Resource1_REST",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "rest_http.txt"

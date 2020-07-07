@@ -18,10 +18,17 @@
 					"dataflow": {
 						"referenceName": "Test SQL UPSERT",
 						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					}
 				}
 			}
 		],
+		"folder": {
+			"name": "Flows"
+		},
 		"annotations": []
 	}
 }

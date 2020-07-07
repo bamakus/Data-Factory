@@ -40,7 +40,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob2",
+						"referenceName": "AzureBlob2_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"path": {

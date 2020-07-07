@@ -1,0 +1,15 @@
+{
+	"name": "URL_Resource1_REST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestService1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "https://jsonplaceholder.typicode.com/posts?userId=1"
+		},
+		"schema": []
+	}
+}

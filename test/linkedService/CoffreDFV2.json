@@ -5,6 +5,7 @@
 		"type": "AzureKeyVault",
 		"typeProperties": {
 			"baseUrl": "https://MonCoffre2.vault.azure.net/"
-		}
+		},
+		"description": "test"
 	}
 }

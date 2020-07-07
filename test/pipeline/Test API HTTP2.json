@@ -29,13 +29,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HttpJson2",
+						"referenceName": "URL_Http_Json2",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "json_http2.csv"
@@ -134,7 +134,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureBlob3",
+						"referenceName": "AzureBlob3_ABS",
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "json_http2.csv"

@@ -27,10 +27,17 @@
 								"NomBase": "MaBase"
 							}
 						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					}
 				}
 			}
 		],
+		"folder": {
+			"name": "Flows"
+		},
 		"annotations": []
 	}
 }

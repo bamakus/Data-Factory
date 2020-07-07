@@ -1,0 +1,70 @@
+{
+	"name": "Orders_Json_ABS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "returnReference",
+				"type": "String"
+			},
+			{
+				"name": "orderReference",
+				"type": "String"
+			},
+			{
+				"name": "customerId",
+				"type": "Int64"
+			},
+			{
+				"name": "items",
+				"type": "String"
+			},
+			{
+				"name": "timestamp",
+				"type": "String"
+			},
+			{
+				"name": "variantId",
+				"type": "Int64"
+			},
+			{
+				"name": "quantity",
+				"type": "Int64"
+			},
+			{
+				"name": "code",
+				"type": "Int64"
+			},
+			{
+				"name": "notes",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"jsonNodeReference": "$.['items']",
+				"jsonPathDefinition": {
+					"returnReference": "$.['returnReference']",
+					"orderReference": "$.['orderReference']",
+					"customerId": "$.['customerId']",
+					"items": "$.['items']",
+					"timestamp": "$.['timestamp']",
+					"variantId": "['variantId']",
+					"quantity": "['quantity']",
+					"code": "['returnReason']['code']",
+					"notes": "['returnReason']['notes']"
+				}
+			},
+			"fileName": "orders.json",
+			"folderPath": "adfv2branch"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

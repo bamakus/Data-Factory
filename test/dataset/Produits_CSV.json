@@ -1,0 +1,32 @@
+{
+	"name": "Produits_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Produits.csv",
+				"container": "adfv2branch"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Produit",
+				"type": "String"
+			},
+			{
+				"name": "Couleur",
+				"type": "String"
+			}
+		]
+	}
+}
