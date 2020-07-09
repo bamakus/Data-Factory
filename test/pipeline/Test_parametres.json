@@ -24,7 +24,9 @@
 				"defaultValue": "Romeo"
 			}
 		},
-		"annotations": []
+		"annotations": [
+			"Bamakus"
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
