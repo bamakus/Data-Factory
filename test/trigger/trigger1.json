@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "copie fichiers",
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
