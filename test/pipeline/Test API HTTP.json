@@ -176,7 +176,7 @@
 				"typeProperties": {
 					"variableName": "Name2",
 					"value": {
-						"value": "\"@variables('Name')\"",
+						"value": "@variables('Name')",
 						"type": "Expression"
 					}
 				}
