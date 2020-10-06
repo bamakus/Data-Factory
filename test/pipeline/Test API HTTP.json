@@ -162,7 +162,7 @@
 				}
 			},
 			{
-				"name": "Viewer",
+				"name": "Nom pipeline2",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -176,7 +176,27 @@
 				"typeProperties": {
 					"variableName": "Name2",
 					"value": {
-						"value": "Le nom du pipeline est :  @variables('Name')",
+						"value": "@variables('Name')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Viewer",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Nom pipeline2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name3",
+					"value": {
+						"value": "@variables('Name2')",
 						"type": "Expression"
 					}
 				}
@@ -190,6 +210,9 @@
 				"type": "String"
 			},
 			"Name2": {
+				"type": "String"
+			},
+			"Name3": {
 				"type": "String"
 			}
 		},
