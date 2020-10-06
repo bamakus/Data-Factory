@@ -176,7 +176,7 @@
 				"typeProperties": {
 					"variableName": "Name2",
 					"value": {
-						"value": "CONCAT(\"Le nom du pipeline est :\", @variables('Name'))",
+						"value": "Le nom du pipeline est :  @variables('Name')",
 						"type": "Expression"
 					}
 				}
