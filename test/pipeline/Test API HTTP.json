@@ -82,7 +82,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Nom pipeline",
+						"activity": "Viewer",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -156,6 +156,26 @@
 				"typeProperties": {
 					"variableName": "Name",
 					"value": {
+						"value": "@pipeline().DataFactory",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Viewer",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Nom pipeline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name2",
+					"value": {
 						"value": "\"@variables('Name')\"",
 						"type": "Expression"
 					}
@@ -167,6 +187,9 @@
 				"type": "String"
 			},
 			"Name": {
+				"type": "String"
+			},
+			"Name2": {
 				"type": "String"
 			}
 		},
