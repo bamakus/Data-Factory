@@ -1,0 +1,27 @@
+{
+	"name": "Copie de fichiers - Blog - trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Copie de Fichiers - Blob",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sinkBlobContainer": "bamakstockage"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2021-03-07T17:38:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
