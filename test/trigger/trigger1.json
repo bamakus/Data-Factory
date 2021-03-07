@@ -13,6 +13,12 @@
 				"parameters": {
 					"sinkBlobContainer": "adfv2branch"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "ETL-SQL",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
@@ -20,7 +26,7 @@
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 1,
-				"startTime": "2019-11-16T12:27:00.000Z",
+				"startTime": "2019-11-16T12:27:00Z",
 				"timeZone": "UTC"
 			}
 		}
