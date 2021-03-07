@@ -4,23 +4,13 @@
 		"description": "copie fichiers",
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Copie de Fichiers - Blob",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sinkBlobContainer": "adfv2branch"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 1,
-				"startTime": "2019-11-16T12:27:00.000Z",
+				"startTime": "2019-11-16T12:27:00Z",
 				"timeZone": "UTC"
 			}
 		}
