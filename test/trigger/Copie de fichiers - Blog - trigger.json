@@ -2,7 +2,7 @@
 	"name": "Copie de fichiers - Blog - trigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
