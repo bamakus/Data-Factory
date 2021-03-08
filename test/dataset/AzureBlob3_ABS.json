@@ -12,6 +12,24 @@
 		},
 		"annotations": [],
 		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "userId",
+				"type": "String"
+			},
+			{
+				"name": "id",
+				"type": "String"
+			},
+			{
+				"name": "title",
+				"type": "String"
+			},
+			{
+				"name": "body",
+				"type": "String"
+			}
+		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
