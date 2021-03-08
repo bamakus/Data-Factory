@@ -4,56 +4,140 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Nom de fabrique de données",
 			"defaultValue": "Bamsfabrique"
 		},
 		"AzureBlob_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlob'"
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlob »"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
+		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « functionKey » de « AzureFunction1 »"
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureSqlDatabase1 »"
 		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+			"metadata": "Chaîne sécurisée pour « connectionString » de « SqlServer1 »"
 		},
 		"SqlServer1_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SqlServer1'"
+			"metadata": "Chaîne sécurisée pour « password » de « SqlServer1 »"
 		},
-		"AzureBlob2_properties_typeProperties_fileName": {
+		"AzureBlob2_ABS_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT(pipeline().RunId, '.txt')"
 		},
-		"AzureBlob2_properties_typeProperties_folderPath": {
+		"AzureBlob2_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@{dataset().path}"
 		},
-		"AzureBlob3_properties_typeProperties_folderPath": {
+		"AzureBlob3_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlob3_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "adfv2branch"
 		},
-		"SinkDataset_properties_typeProperties_fileName": {
+		"AzureBlob4_ABS_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
 		},
-		"SinkDataset_properties_typeProperties_folderPath": {
+		"AzureBlob4_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "adfv2branch"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().FolderPath"
+		},
+		"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@{dataset().path}"
+		},
+		"Orders_Json_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "orders.json"
+		},
+		"Orders_Json_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
+		},
+		"Produit_Json_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "produit.json"
+		},
+		"Produit_Json_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://bamakapp2.azurewebsites.net"
+		},
+		"CoffreDFV2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://MonCoffre2.vault.azure.net/"
+		},
+		"HttpLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://oc-jswebsrv.herokuapp.com/api/articles"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jsonplaceholder.typicode.com"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jsonplaceholder.typicode.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "MONSERVEUR\\Administrator"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
+		"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
+			"defaultValue": "bamakstockage"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
+		"Run pip MASTER_properties_Master_parameters_NomBase": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
+			"defaultValue": "MaBase"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_receiver": {
+			"type": "string",
+			"defaultValue": "chrisherv@gmail.com"
 		},
 		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -68,11 +152,11 @@
 		},
 		"containerUri": {
 			"type": "string",
-			"metadata": "URI to storage account containing linked ARM templates"
+			"metadata": "URI pour le compte de stockage contenant des modèles ARM liés"
 		},
 		"containerSasToken": {
 			"type": "string",
-			"metadata": "Sas Token to storage account containing linked ARM templates"
+			"metadata": "Jeton SAS pour le compte de stockage contenant des modèles ARM liés"
 		}
 	},
 	"variables": {
@@ -80,7 +164,7 @@
 	},
 	"resources": [
 		{
-			"name": "ArmTemplate_0",
+			"name": "Bamsfabrique_ArmTemplate_0",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -96,14 +180,29 @@
 					"AzureBlob_connectionString": {
 						"value": "[parameters('AzureBlob_connectionString')]"
 					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureFunction1_functionKey": {
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					},
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
-					"SqlServer1_connectionString": {
-						"value": "[parameters('SqlServer1_connectionString')]"
+					"AzureFunction1_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
 					},
-					"SqlServer1_password": {
-						"value": "[parameters('SqlServer1_password')]"
+					"CoffreDFV2_properties_typeProperties_baseUrl": {
+						"value": "[parameters('CoffreDFV2_properties_typeProperties_baseUrl')]"
+					},
+					"HttpLinkedService_properties_typeProperties_url": {
+						"value": "[parameters('HttpLinkedService_properties_typeProperties_url')]"
+					},
+					"HttpServer1_properties_typeProperties_url": {
+						"value": "[parameters('HttpServer1_properties_typeProperties_url')]"
+					},
+					"RestService1_properties_typeProperties_url": {
+						"value": "[parameters('RestService1_properties_typeProperties_url')]"
 					},
 					"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
@@ -114,30 +213,24 @@
 					"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
 					},
-					"AzureBlob2_properties_typeProperties_fileName": {
-						"value": "[parameters('AzureBlob2_properties_typeProperties_fileName')]"
+					"AzureBlob2_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_fileName')]"
 					},
-					"AzureBlob2_properties_typeProperties_folderPath": {
-						"value": "[parameters('AzureBlob2_properties_typeProperties_folderPath')]"
+					"AzureBlob2_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_folderPath')]"
 					},
-					"AzureBlob3_properties_typeProperties_folderPath": {
-						"value": "[parameters('AzureBlob3_properties_typeProperties_folderPath')]"
+					"AzureBlob3_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlob3_ABS_properties_typeProperties_fileName')]"
 					},
-					"SinkDataset_properties_typeProperties_fileName": {
-						"value": "[parameters('SinkDataset_properties_typeProperties_fileName')]"
-					},
-					"SinkDataset_properties_typeProperties_folderPath": {
-						"value": "[parameters('SinkDataset_properties_typeProperties_folderPath')]"
-					},
-					"SqlServer1_properties_typeProperties_userName": {
-						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					"AzureBlob3_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlob3_ABS_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "ArmTemplate_1",
+			"name": "Bamsfabrique_ArmTemplate_1",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -150,16 +243,130 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
-						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart')]"
+					"AzureBlob4_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlob4_ABS_properties_typeProperties_fileName')]"
 					},
-					"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
-						"value": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd')]"
+					"AzureBlob4_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlob4_ABS_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName')]"
+					},
+					"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName')]"
+					},
+					"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName')]"
+					},
+					"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlob_Folder_ABS_properties_typeProperties_folderPath')]"
+					},
+					"Orders_Json_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_fileName')]"
+					},
+					"Orders_Json_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_folderPath')]"
+					},
+					"Produit_Json_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_fileName')]"
+					},
+					"Produit_Json_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "Bamsfabrique_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"SqlServer1_connectionString": {
+						"value": "[parameters('SqlServer1_connectionString')]"
+					},
+					"SqlServer1_password": {
+						"value": "[parameters('SqlServer1_password')]"
+					},
+					"SqlServer1_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "Bamsfabrique_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "Bamsfabrique_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
+						"value": "[parameters('Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer')]"
+					},
+					"Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer": {
+						"value": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer')]"
+					},
+					"Trigger avec param_properties_CopieVentes-Blob_parameters_receiver": {
+						"value": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_receiver')]"
+					},
+					"Run pip MASTER_properties_Master_parameters_NomBase": {
+						"value": "[parameters('Run pip MASTER_properties_Master_parameters_NomBase')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_3')]"
 			]
 		}
 	]

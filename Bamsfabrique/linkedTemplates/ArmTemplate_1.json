@@ -4,16 +4,60 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Nom de fabrique de données",
 			"defaultValue": "Bamsfabrique"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
+		"AzureBlob4_ABS_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
+			"defaultValue": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
+		"AzureBlob4_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
+			"defaultValue": "adfv2branch"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().FolderPath"
+		},
+		"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@{dataset().path}"
+		},
+		"Orders_Json_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "orders.json"
+		},
+		"Orders_Json_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
+		},
+		"Produit_Json_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "produit.json"
+		},
+		"Produit_Json_ABS_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
 		}
 	},
 	"variables": {
@@ -21,1011 +65,829 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_i_aqz')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlob4_ABS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "SqlServer1",
+					"referenceName": "AzureBlob",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					},
-					{
-						"name": "Type_Vente_FK",
-						"type": "Int32"
-					}
-				],
+				"type": "AzureBlob",
 				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[Ventes]')]"
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": {
+						"value": "[parameters('AzureBlob4_ABS_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('AzureBlob4_ABS_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_i_ojw')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataDestination_File_ABS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "It describes the destination store.",
 				"linkedServiceName": {
-					"referenceName": "SqlServer1",
+					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
+				"parameters": {
+					"path": {
+						"type": "String"
 					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente",
+					"filename": {
 						"type": "String"
 					}
-				],
+				},
+				"annotations": [],
+				"type": "AzureBlob",
 				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[Ventes]')]"
+					"fileName": {
+						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copie-Incremental-SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataSource_File_ABS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "LookupOldWaterMarkActivity",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select * from watermarktable"
-							},
-							"dataset": {
-								"referenceName": "WatermarkDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LookupNewWaterMarkActivity",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table"
-							},
-							"dataset": {
-								"referenceName": "SourceDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "IncrementalCopyActivity",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LookupNewWaterMarkActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LookupOldWaterMarkActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "[concat('[', 'dbo].[data_source_table]')]"
-							},
-							{
-								"name": "Destination",
-								"value": "adfv2branch/@{CONCAT('Incremental-', pipeline().RunId, '.txt')}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SinkDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "StoredProceduretoWriteWatermarkActivity",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "IncrementalCopyActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'dbo].[sp_write_watermark]')]",
-							"storedProcedureParameters": {
-								"LastModifiedtime": {
-									"value": {
-										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
-										"type": "Expression"
-									},
-									"type": "datetime"
-								},
-								"TableName": {
-									"value": {
-										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServer1",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopieVentes-Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "[concat('[', 'dbo].[Ventes]')]"
-							},
-							{
-								"name": "Destination",
-								"value": "@{pipeline().parameters.sinkBlobContainer}/@{CONCAT(pipeline().RunId, '.txt')}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select * from Ventes"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_Ventes_i_ojw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob2",
-								"type": "DatasetReference",
-								"parameters": {
-									"path": "\n@pipeline().parameters.sinkBlobContainer"
-								}
-							}
-						]
-					},
-					{
-						"name": "NotificationSuccess",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-04.northeurope.logic.azure.com:443/workflows/aacb3517ccc4448caeabd027bef823f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c75baHOYmu-seRk18dxojF4Uu732zEpFUlTFHl3DzdU",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/json"
-							},
-							"body": {
-								"message": "@{activity('Copy1').output.dataWritten}",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@pipeline().parameters.receiver"
-							}
-						}
-					},
-					{
-						"name": "NotificationFail",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Copy1",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-00.northeurope.logic.azure.com:443/workflows/7bd654e9a315448bb4fee2d2586d3828/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Jv2oCPgGoW5RvJgqYAhx38KNWSBfTI3vEa--mug5emg",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/json"
-							},
-							"body": {
-								"message": "@{activity('Copy1').error.message}",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@pipeline().parameters.receiver"
-							}
-						}
-					}
-				],
+				"description": "It describes the file in the data source store. ",
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
 				"parameters": {
-					"sinkBlobContainer": {
+					"path": {
 						"type": "String"
 					},
-					"receiver": {
+					"filename": {
 						"type": "String"
 					}
 				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_ojw')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopieVentes-SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy-dbo_Ventes",
-						"description": "Test",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK from [dbo].[Ventes] A \nLeft JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente \nwhere [Date_facture] \n>= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd,\n 'yyyy-MM-dd HH:mm' )}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Client_FK": "Client_FK",
-									"CA": "CA",
-									"Budget": "Budget",
-									"Date_facture": "Date_facture",
-									"Type_Vente_FK": "Type_Vente_FK"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_Ventes_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dbo_Ventes_o_ojw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"windowStart": {
-						"type": "String"
-					},
-					"windowEnd": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_aqz')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ETL-SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy-dbo_DimClient",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select *, cast(null as date) as datedebut , cast(null as date) as datefin, cast(null as int) as currentrow,getdate() as lastupdate   from [dbo].[DimClient]"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"preCopyScript": "delete dbo.DimClient"
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Client_PK": "Client_PK",
-									"ClientCode": "ClientCode",
-									"Client": "Client",
-									"TypeClient": "TypeClient",
-									"SegmentationClient": "SegmentationClient",
-									"datedebut": "DateDebut",
-									"datefin": "DateFin",
-									"currentrow": "IsRowCurrent",
-									"lastupdate": "LastUpdated"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_DimClient_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dbo_DimClient_o_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy-dbo_Ventes",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy-dbo-type_vente",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "Select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK  from [dbo].[Ventes]  A Left JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente  Where \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"preCopyScript": {
-									"value": "delete dbo.Ventes where  \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Client_FK": "Client_FK",
-									"CA": "CA",
-									"Budget": "Budget",
-									"Date_facture": "Date_facture",
-									"Type_Vente_FK": "Type_Vente_FK"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_Ventes_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dbo_Ventes_o_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy-dbo-type_vente",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy-dbo_DimClient",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"preCopyScript": "delete DimTypeVente"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Type_Vente_PK": "Type_Vente_PK",
-									"Type_Vente": "Type_Vente"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_DimTypeVente_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dbo_DimTypeVente_o_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"windowStart": {
-						"type": "String"
-					},
-					"windowEnd": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_aqz')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Iterations_Copie_Table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Paramètre pipeline = Liste de tables (type objet) \nBoucle sur objet \nLe nom de la table réceptacle est variabilisé",
-				"activities": [
-					{
-						"name": "IterationTablesSQL",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@pipeline().parameters.tableList",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlSource",
-											"sqlReaderQuery": {
-												"value": "SELECT * FROM [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
-												"type": "Expression"
-											}
-										},
-										"sink": {
-											"type": "SqlSink",
-											"writeBatchSize": 10000,
-											"preCopyScript": {
-												"value": "TRUNCATE TABLE [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
-												"type": "Expression"
-											}
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0
-									},
-									"inputs": [
-										{
-											"referenceName": "Table_source",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "Table_target",
-											"type": "DatasetReference",
-											"parameters": {
-												"DWTableName": "[concat('[', '@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]')]"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"tableList": {
-						"type": "Object"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test_if')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "MyIfCondition",
-						"type": "IfCondition",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@bool(pipeline().parameters.routeSelection)",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "CopyFromBlobToBlob2",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlSource",
-											"sqlReaderQuery": "select * from ventes"
-										},
-										"sink": {
-											"type": "BlobSink"
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0,
-										"translator": {
-											"type": "TabularTranslator",
-											"columnMappings": {
-												"Budget": "Budget",
-												"Date_facture": "Date_facture",
-												"Type_Vente": "Type_Vente",
-												"CA": "CA",
-												"Client_FK": "Client_FK"
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "dbo_Ventes_i_ojw",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "AzureBlob2",
-											"type": "DatasetReference",
-											"parameters": {
-												"path": "@pipeline().parameters.outputPath2"
-											}
-										}
-									]
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "CopyFromBlobToBlob1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlSource",
-											"sqlReaderQuery": "select * from ventes"
-										},
-										"sink": {
-											"type": "BlobSink"
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0,
-										"translator": {
-											"type": "TabularTranslator",
-											"columnMappings": {
-												"Budget": "Budget",
-												"Date_facture": "Date_facture",
-												"Type_Vente": "Type_Vente",
-												"CA": "CA",
-												"Client_FK": "Client_FK"
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "dbo_Ventes_i_ojw",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "AzureBlob2",
-											"type": "DatasetReference",
-											"parameters": {
-												"path": "@pipeline().parameters.outputPath1"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"outputPath1": {
-						"type": "String"
-					},
-					"outputPath2": {
-						"type": "String"
-					},
-					"routeSelection": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_ojw')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Master')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select '2018-02-01'  as datedeb ,  '2018-05-31'   as datefin\n\n"
-							},
-							"dataset": {
-								"referenceName": "dbo_DimClient_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
-					},
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "ETL-SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"windowStart": {
-									"value": "@{activity('Lookup1').output.firstRow.datedeb}",
-									"type": "Expression"
-								},
-								"windowEnd": {
-									"value": "@{activity('Lookup1').output.firstRow.datefin}",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/ETL-SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Master_Liste_tables_a_copier')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Liste_tables_source",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES \nWHERE TABLE_NAME IN ('DimTypeVente' , 'DimClient')"
-							},
-							"dataset": {
-								"referenceName": "Table_source",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Liste_tables_source",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Iterations_Copie_Table",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"tableList": {
-									"value": "@activity('Liste_tables_source').output.value",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Iterations_Copie_Table')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger_CopyPipeline_ojw')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "CopieVentes-SQL",
-						"type": "PipelineReference"
+				"type": "AzureBlob",
+				"typeProperties": {
+					"fileName": {
+						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName')]",
+						"type": "Expression"
 					},
+					"folderPath": {
+						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					},
+					"key": {
+						"value": "@dataset().filename",
+						"type": "Expression"
+					},
+					"bucketName": {
+						"value": "@dataset().path",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataSource_Folder_ABS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "It describes the folder in the data source store.",
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderPath": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"fileName": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName')]",
+					"folderPath": {
+						"value": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					},
+					"key": "",
+					"bucketName": {
+						"value": "@dataset().FolderPath",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlob_Folder_ABS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"path": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Client_FK"
+					},
+					{
+						"name": "CA"
+					},
+					{
+						"name": "Budget"
+					},
+					{
+						"name": "Date_facture"
+					},
+					{
+						"name": "Type_Vente"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"folderPath": {
+						"value": "[parameters('AzureBlob_Folder_ABS_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlob_Folder_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "adfv2branch"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Produit",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
 					"parameters": {
-						"windowStart": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart')]",
-						"windowEnd": "[parameters('trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd')]"
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
 					}
 				},
-				"type": "TumblingWindowTrigger",
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Client_PK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ClientCode",
+						"type": "varchar"
+					},
+					{
+						"name": "Client",
+						"type": "varchar"
+					},
+					{
+						"name": "TypeClient",
+						"type": "varchar"
+					},
+					{
+						"name": "SegmentationClient",
+						"type": "varchar"
+					},
+					{
+						"name": "DateDebut",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DateFin",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsRowCurrent",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastUpdated",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
 				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2018-02-21T00:00:00Z",
-					"endTime": "2099-12-30T23:00:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 10,
-					"retryPolicy": {
-						"count": 3,
-						"intervalInSeconds": 120
+					"schema": "dbo",
+					"table": "DimClient"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "userId",
+						"type": "varchar"
+					},
+					{
+						"name": "id",
+						"type": "varchar"
+					},
+					{
+						"name": "title",
+						"type": "varchar"
+					},
+					{
+						"name": "body",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "MaBase",
+					"table": "Test_REST"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "MaBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Produit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Couleur",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Rank",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "LesProduits"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CADOutput1_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "demo"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CurrencyDatasetCAD1_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Currency_CAD.txt",
+						"container": "demo"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CurrencyDatasetUSD1_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Currency_USD.txt",
+						"container": "demo"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimEmp_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "EmpID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "surrogatekey",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Region",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Status",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EmpFunction",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Level",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Role",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StartDate",
+						"type": "date"
+					},
+					{
+						"name": "EndDate",
+						"type": "date"
+					},
+					{
+						"name": "iscurrent",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "processtime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[DimEmp]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FactTable2_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "dbo.FactTable2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Factures_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "factures.csv",
+						"container": "adfv2branch"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "employeeID",
+						"type": "String"
+					},
+					{
+						"name": "Hours",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "ProjDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Login_Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "login.json",
+						"container": "adfv2branch"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"username": {
+							"type": "string"
+						},
+						"password": {
+							"type": "string"
+						}
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CopieVentes-SQL')]"
-			]
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Orders_Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "orders.json",
+						"container": "adfv2branch"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"returnReference": {
+							"type": "string"
+						},
+						"orderReference": {
+							"type": "string"
+						},
+						"customerId": {
+							"type": "integer"
+						},
+						"items": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"variantId": {
+										"type": "integer"
+									},
+									"quantity": {
+										"type": "integer"
+									},
+									"returnReason": {
+										"type": "object",
+										"properties": {
+											"code": {
+												"type": "integer"
+											},
+											"notes": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"timestamp": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Orders_Json_ABS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "returnReference",
+						"type": "String"
+					},
+					{
+						"name": "orderReference",
+						"type": "String"
+					},
+					{
+						"name": "customerId",
+						"type": "Int64"
+					},
+					{
+						"name": "items",
+						"type": "String"
+					},
+					{
+						"name": "timestamp",
+						"type": "String"
+					},
+					{
+						"name": "variantId",
+						"type": "Int64"
+					},
+					{
+						"name": "quantity",
+						"type": "Int64"
+					},
+					{
+						"name": "code",
+						"type": "Int64"
+					},
+					{
+						"name": "notes",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects",
+						"jsonNodeReference": "$.['items']",
+						"jsonPathDefinition": {
+							"returnReference": "$.['returnReference']",
+							"orderReference": "$.['orderReference']",
+							"customerId": "$.['customerId']",
+							"items": "$.['items']",
+							"timestamp": "$.['timestamp']",
+							"variantId": "[['variantId']",
+							"quantity": "[['quantity']",
+							"code": "[['returnReason']['code']",
+							"notes": "[['returnReason']['notes']"
+						}
+					},
+					"fileName": "[parameters('Orders_Json_ABS_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('Orders_Json_ABS_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Produit_Json_ABS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects"
+					},
+					"fileName": "[parameters('Produit_Json_ABS_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('Produit_Json_ABS_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Produits2_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Produits2.csv",
+						"container": "adfv2branch"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Produit",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
 		}
 	]
 }

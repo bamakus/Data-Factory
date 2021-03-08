@@ -6,149 +6,6 @@
 			"type": "string",
 			"metadata": "Nom de fabrique de données",
 			"defaultValue": "Bamsfabrique"
-		},
-		"AzureBlob_connectionString": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlob »"
-		},
-		"AzureBlobStorage1_connectionString": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
-		},
-		"AzureFunction1_functionKey": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « functionKey » de « AzureFunction1 »"
-		},
-		"AzureSqlDatabase1_connectionString": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureSqlDatabase1 »"
-		},
-		"SqlServer1_connectionString": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « SqlServer1 »"
-		},
-		"SqlServer1_password": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « password » de « SqlServer1 »"
-		},
-		"AzureBlob2_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT(pipeline().RunId, '.txt')"
-		},
-		"AzureBlob2_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@{dataset().path}"
-		},
-		"AzureBlob3_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().filename"
-		},
-		"AzureBlob3_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"AzureBlob4_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
-		},
-		"AzureBlob4_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().filename"
-		},
-		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().path"
-		},
-		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().filename"
-		},
-		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().path"
-		},
-		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().FolderPath"
-		},
-		"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@{dataset().path}"
-		},
-		"Orders_Json_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "orders.json"
-		},
-		"Orders_Json_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"Produit_Json_ABS_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "produit.json"
-		},
-		"Produit_Json_ABS_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"AzureFunction1_properties_typeProperties_functionAppUrl": {
-			"type": "string",
-			"defaultValue": "https://bamakapp2.azurewebsites.net"
-		},
-		"CoffreDFV2_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://MonCoffre2.vault.azure.net/"
-		},
-		"HttpLinkedService_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://oc-jswebsrv.herokuapp.com/api/articles"
-		},
-		"HttpServer1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://jsonplaceholder.typicode.com"
-		},
-		"RestService1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://jsonplaceholder.typicode.com"
-		},
-		"SqlServer1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "MONSERVEUR\\Administrator"
-		},
-		"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
-			"type": "string",
-			"defaultValue": "bamakstockage"
-		},
-		"Run pip MASTER_properties_Master_parameters_NomBase": {
-			"type": "string",
-			"defaultValue": "MaBase"
-		},
-		"Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"Trigger avec param_properties_CopieVentes-Blob_parameters_receiver": {
-			"type": "string",
-			"defaultValue": "chrisherv@gmail.com"
-		},
-		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
-			"type": "string",
-			"defaultValue": "bamak.database.windows.net"
-		},
-		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
-			"type": "string",
-			"defaultValue": "bamak"
-		},
-		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
-			"type": "secureString"
 		}
 	},
 	"variables": {
@@ -306,8 +163,7 @@
 							},
 							"dataset": {
 								"referenceName": "WatermarkDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						}
 					},
@@ -330,8 +186,7 @@
 							},
 							"dataset": {
 								"referenceName": "SourceDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						}
 					},
@@ -386,15 +241,13 @@
 						"inputs": [
 							{
 								"referenceName": "SourceDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "AzureBlob4_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					},
@@ -446,8 +299,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/WatermarkDataset_SQL')]",
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_SQL')]",
-				"[concat(variables('factoryId'), '/datasets/AzureBlob4_ABS')]",
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlob4_ABS')]"
 			]
 		},
 		{
@@ -490,8 +342,7 @@
 						"inputs": [
 							{
 								"referenceName": "dbo_Ventes_i_ojw",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -581,7 +432,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_ojw')]",
 				"[concat(variables('factoryId'), '/datasets/AzureBlob2_ABS')]"
 			]
 		},
@@ -630,8 +480,7 @@
 						"inputs": [
 							{
 								"referenceName": "dbo_Ventes_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -656,7 +505,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_aqz')]",
 				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_o_ojw')]"
 			]
 		},
@@ -708,8 +556,7 @@
 						"inputs": [
 							{
 								"referenceName": "dbo_DimClient_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -775,8 +622,7 @@
 						"inputs": [
 							{
 								"referenceName": "dbo_Ventes_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -833,8 +679,7 @@
 						"inputs": [
 							{
 								"referenceName": "dbo_DimTypeVente_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -870,11 +715,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_DimClient_i_aqz')]",
 				"[concat(variables('factoryId'), '/datasets/dbo_DimClient_o_aqz')]",
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_aqz')]",
 				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_o_aqz')]",
-				"[concat(variables('factoryId'), '/datasets/dbo_DimTypeVente_i_aqz')]",
 				"[concat(variables('factoryId'), '/datasets/dbo_DimTypeVente_o_aqz')]"
 			]
 		},
@@ -929,8 +771,7 @@
 									"inputs": [
 										{
 											"referenceName": "Table_source_SQL",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									],
 									"outputs": [
@@ -983,9 +824,7 @@
 							"dataflow": {
 								"referenceName": "DF-FactLoader1",
 								"type": "DataFlowReference",
-								"parameters": {},
 								"datasetParameters": {
-									"Facts": {},
 									"DimEmployee": {
 										"NomBase": "MaBase"
 									},
@@ -994,7 +833,6 @@
 									}
 								}
 							},
-							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -1028,8 +866,7 @@
 								"referenceName": "Test Data Flow lookup",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"waitOnCompletion": true
 						}
 					}
 				],
@@ -1066,8 +903,7 @@
 							},
 							"dataset": {
 								"referenceName": "dbo_DimClient_i_aqz",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": true
 						}
@@ -1116,7 +952,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_DimClient_i_aqz')]",
 				"[concat(variables('factoryId'), '/pipelines/ETL-SQL')]"
 			]
 		},
@@ -1144,8 +979,7 @@
 							},
 							"dataset": {
 								"referenceName": "Table_source_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": false
 						}
@@ -1400,14 +1234,8 @@
 						"typeProperties": {
 							"dataflow": {
 								"referenceName": "MovieDemo1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"Movies": {},
-									"Output": {}
-								}
+								"type": "DataFlowReference"
 							},
-							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -1499,8 +1327,7 @@
 						"inputs": [
 							{
 								"referenceName": "Orders_Json",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -1539,8 +1366,7 @@
 						"inputs": [
 							{
 								"referenceName": "Orders_Json_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -1586,7 +1412,6 @@
 						"typeProperties": {
 							"url": "https://s9events.azure-automation.net/webhooks?token=yqimwu2V0%2fWuk6b24fkOhBKW6Mos0%2fbG%2fBwCw%2fFVLnI%3d",
 							"method": "POST",
-							"headers": {},
 							"body": {
 								"message": "hello world"
 							}
@@ -1648,7 +1473,6 @@
 											"type": "Expression"
 										},
 										"method": "GET",
-										"headers": {},
 										"authentication": {
 											"type": "MSI",
 											"resource": "https://*.asazure.windows.net"
@@ -1685,7 +1509,6 @@
 								"type": "Expression"
 							},
 							"method": "POST",
-							"headers": {},
 							"body": {
 								"Type": "Full",
 								"CommitMode": "transactional",
@@ -1732,8 +1555,7 @@
 											"value": "@string(activity('GetAzureASRefreshStatus').output)",
 											"type": "Expression"
 										},
-										"method": "GET",
-										"headers": {}
+										"method": "GET"
 									}
 								}
 							]
@@ -1763,7 +1585,6 @@
 								"type": "Expression"
 							},
 							"method": "GET",
-							"headers": {},
 							"body": {
 								"Type": "Full",
 								"CommitMode": "transactional",
@@ -1883,8 +1704,7 @@
 							},
 							"dataset": {
 								"referenceName": "Login_Json",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						}
 					},
@@ -2036,15 +1856,13 @@
 						"inputs": [
 							{
 								"referenceName": "URL_Http_Json",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "Produit_Json_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					},
@@ -2072,8 +1890,7 @@
 								"value": "@variables('URL')",
 								"type": "Expression"
 							},
-							"method": "GET",
-							"headers": {}
+							"method": "GET"
 						}
 					},
 					{
@@ -2134,8 +1951,7 @@
 						"inputs": [
 							{
 								"referenceName": "URL_Http_Json",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -2264,8 +2080,7 @@
 						"inputs": [
 							{
 								"referenceName": "URL_Http_Json2",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -2417,8 +2232,7 @@
 						"inputs": [
 							{
 								"referenceName": "URL_Resource1_REST",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -2475,8 +2289,7 @@
 						"inputs": [
 							{
 								"referenceName": "URL_Resource1_REST",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
@@ -2526,15 +2339,8 @@
 						"typeProperties": {
 							"dataflow": {
 								"referenceName": "Test SQL UPSERT",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"target": {},
-									"sink1": {}
-								}
+								"type": "DataFlowReference"
 							},
-							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -2572,15 +2378,8 @@
 						"typeProperties": {
 							"dataflow": {
 								"referenceName": "test lookup 2",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"source1": {},
-									"sink1": {}
-								}
+								"type": "DataFlowReference"
 							},
-							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -2618,15 +2417,8 @@
 						"typeProperties": {
 							"dataflow": {
 								"referenceName": "test lookup",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"source1": {},
-									"sink1": {}
-								}
+								"type": "DataFlowReference"
 							},
-							"staging": {},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -2665,7 +2457,6 @@
 						"typeProperties": {
 							"functionName": "HttpTrigger1",
 							"method": "POST",
-							"headers": {},
 							"body": {
 								"name": "Tata"
 							}
@@ -2706,7 +2497,6 @@
 						"typeProperties": {
 							"functionName": "HttpTrigger1",
 							"method": "POST",
-							"headers": {},
 							"body": {
 								"name": "Bamakus"
 							}
@@ -2804,15 +2594,13 @@
 						"inputs": [
 							{
 								"referenceName": "SqlServerv_DTF2_I",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "SqlServerv_DTF2_O",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}
@@ -2879,8 +2667,7 @@
 									"inputs": [
 										{
 											"referenceName": "dbo_Ventes_i_ojw",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									],
 									"outputs": [
@@ -2931,8 +2718,7 @@
 									"inputs": [
 										{
 											"referenceName": "dbo_Ventes_i_ojw",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									],
 									"outputs": [
@@ -2963,7 +2749,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_ojw')]",
 				"[concat(variables('factoryId'), '/datasets/AzureBlob2_ABS')]"
 			]
 		},
@@ -3045,18 +2830,16 @@
 						"firstRowAsHeader": false
 					},
 					"fileName": {
-						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_fileName')]",
+						"value": "@CONCAT(pipeline().RunId, '.txt')",
 						"type": "Expression"
 					},
 					"folderPath": {
-						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_folderPath')]",
+						"value": "@{dataset().path}",
 						"type": "Expression"
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlob3_ABS')]",
@@ -3106,15 +2889,13 @@
 						"firstRowAsHeader": true
 					},
 					"fileName": {
-						"value": "[parameters('AzureBlob3_ABS_properties_typeProperties_fileName')]",
+						"value": "@dataset().filename",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('AzureBlob3_ABS_properties_typeProperties_folderPath')]"
+					"folderPath": "adfv2branch"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlob4_ABS')]",
@@ -3138,15 +2919,13 @@
 						"firstRowAsHeader": false
 					},
 					"fileName": {
-						"value": "[parameters('AzureBlob4_ABS_properties_typeProperties_fileName')]",
+						"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('AzureBlob4_ABS_properties_typeProperties_folderPath')]"
+					"folderPath": "adfv2branch"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataDestination_File_ABS')]",
@@ -3170,18 +2949,16 @@
 				"type": "AzureBlob",
 				"typeProperties": {
 					"fileName": {
-						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName')]",
+						"value": "@dataset().filename",
 						"type": "Expression"
 					},
 					"folderPath": {
-						"value": "[parameters('AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath')]",
+						"value": "@dataset().path",
 						"type": "Expression"
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataSource_File_ABS')]",
@@ -3205,11 +2982,11 @@
 				"type": "AzureBlob",
 				"typeProperties": {
 					"fileName": {
-						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName')]",
+						"value": "@dataset().filename",
 						"type": "Expression"
 					},
 					"folderPath": {
-						"value": "[parameters('AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath')]",
+						"value": "@dataset().path",
 						"type": "Expression"
 					},
 					"key": {
@@ -3222,9 +2999,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageDataSource_Folder_ABS')]",
@@ -3244,9 +3019,9 @@
 				"annotations": [],
 				"type": "AzureBlob",
 				"typeProperties": {
-					"fileName": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName')]",
+					"fileName": "",
 					"folderPath": {
-						"value": "[parameters('AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath')]",
+						"value": "@dataset().FolderPath",
 						"type": "Expression"
 					},
 					"key": "",
@@ -3256,9 +3031,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlob_Folder_ABS')]",
@@ -3304,14 +3077,12 @@
 						"firstRowAsHeader": false
 					},
 					"folderPath": {
-						"value": "[parameters('AzureBlob_Folder_ABS_properties_typeProperties_folderPath')]",
+						"value": "@{dataset().path}",
 						"type": "Expression"
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlob_Folder_CSV')]",
@@ -3341,9 +3112,7 @@
 					}
 				]
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
@@ -3418,9 +3187,7 @@
 					"table": "DimClient"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
@@ -3467,9 +3234,7 @@
 					"table": "Test_REST"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable3')]",
@@ -3508,9 +3273,7 @@
 					"table": "LesProduits"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CADOutput1_CSV')]",
@@ -3535,9 +3298,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CurrencyDatasetCAD1_CSV')]",
@@ -3563,9 +3324,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CurrencyDatasetUSD1_CSV')]",
@@ -3591,9 +3350,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DimEmp_SQL')]",
@@ -3671,9 +3428,7 @@
 					"tableName": "[[dbo].[DimEmp]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/FactTable2_SQL')]",
@@ -3702,9 +3457,7 @@
 					"tableName": "dbo.FactTable2"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Factures_CSV')]",
@@ -3747,9 +3500,7 @@
 					}
 				]
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Login_Json')]",
@@ -3781,9 +3532,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Orders_Json')]",
@@ -3846,9 +3595,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Orders_Json_ABS')]",
@@ -3916,13 +3663,11 @@
 							"notes": "[['returnReason']['notes']"
 						}
 					},
-					"fileName": "[parameters('Orders_Json_ABS_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('Orders_Json_ABS_properties_typeProperties_folderPath')]"
+					"fileName": "orders.json",
+					"folderPath": "adfv2branch"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Produit_Json_ABS')]",
@@ -3940,13 +3685,11 @@
 						"type": "JsonFormat",
 						"filePattern": "setOfObjects"
 					},
-					"fileName": "[parameters('Produit_Json_ABS_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('Produit_Json_ABS_properties_typeProperties_folderPath')]"
+					"fileName": "produit.json",
+					"folderPath": "adfv2branch"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Produits2_CSV')]",
@@ -3977,9 +3720,7 @@
 					}
 				]
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Produits_CSV')]",
@@ -4014,9 +3755,7 @@
 					}
 				]
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_SQL')]",
@@ -4033,9 +3772,7 @@
 					"tableName": "[[dbo].[data_source_table]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerv_DTF2_I')]",
@@ -4071,9 +3808,7 @@
 					"table": "DTF2_Test_Conversion_I"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerv_DTF2_O')]",
@@ -4112,9 +3847,7 @@
 					"table": "DTF2_Test_Conversion_O"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Table_source_SQL')]",
@@ -4126,12 +3859,9 @@
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {}
+				"type": "SqlServerTable"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Table_target_SQL')]",
@@ -4165,9 +3895,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/TaxiDemoDayStatsSink1_CSV')]",
@@ -4192,9 +3920,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/TaxiDemoTotalByPaymentType1_CSV')]",
@@ -4219,9 +3945,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/TaxiDemoVendorStatsSink1_CSV')]",
@@ -4246,9 +3970,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/URL_Http_Json')]",
@@ -4338,9 +4060,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/WatermarkDataset_SQL')]",
@@ -4357,78 +4077,7 @@
 					"tableName": "[[dbo].[watermarktable]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimClient_i_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "GeographieClient_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "ClientCode",
-						"type": "String"
-					},
-					{
-						"name": "Client",
-						"type": "String"
-					},
-					{
-						"name": "TypeClient",
-						"type": "String"
-					},
-					{
-						"name": "SegmentationClient",
-						"type": "String"
-					},
-					{
-						"name": "lettre UNICODE",
-						"type": "String"
-					},
-					{
-						"name": "Lettre ASCII",
-						"type": "String"
-					},
-					{
-						"name": "datedebut",
-						"type": "DateTime"
-					},
-					{
-						"name": "datefin",
-						"type": "DateTime"
-					},
-					{
-						"name": "currentrow",
-						"type": "Int32"
-					},
-					{
-						"name": "lastupdate",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[DimClient]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dbo_DimClient_o_aqz')]",
@@ -4494,38 +4143,7 @@
 					"tableName": "[[dbo].[DimClient]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_i_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Type_Vente_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[DimTypeVente]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_o_aqz')]",
@@ -4563,95 +4181,7 @@
 					"tableName": "[[dbo].[DimTypeVente]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_i_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					},
-					{
-						"name": "Type_Vente_FK",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[Ventes]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_i_ojw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[Ventes]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_aqz')]",
@@ -4701,9 +4231,7 @@
 					"tableName": "[[dbo].[Ventes]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_ojw')]",
@@ -4753,9 +4281,7 @@
 					"tableName": "[[dbo].[Ventes]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/movie_dataflow_sink1_CSV')]",
@@ -4780,9 +4306,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/movie_dataflow_source1_CSV')]",
@@ -4808,9 +4332,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/taxi_trip_data_input1_CSV')]",
@@ -4836,9 +4358,7 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/taxi_trip_fare_input1_CSV')]",
@@ -4864,34 +4384,6 @@
 				},
 				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlob')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlob_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
-				}
-			},
 			"dependsOn": []
 		},
 		{
@@ -4902,29 +4394,11 @@
 				"annotations": [],
 				"type": "AzureFunction",
 				"typeProperties": {
-					"functionAppUrl": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]",
+					"functionAppUrl": "https://bamakapp2.azurewebsites.net",
 					"functionKey": {
 						"type": "SecureString",
-						"value": "[parameters('AzureFunction1_functionKey')]"
+						"value": "**********"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"NomBase": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -4938,7 +4412,7 @@
 				"annotations": [],
 				"type": "AzureKeyVault",
 				"typeProperties": {
-					"baseUrl": "[parameters('CoffreDFV2_properties_typeProperties_baseUrl')]"
+					"baseUrl": "https://MonCoffre2.vault.azure.net/"
 				}
 			},
 			"dependsOn": []
@@ -4951,7 +4425,7 @@
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {
-					"url": "[parameters('HttpLinkedService_properties_typeProperties_url')]",
+					"url": "https://oc-jswebsrv.herokuapp.com/api/articles",
 					"enableServerCertificateValidation": false,
 					"authenticationType": "Anonymous"
 				}
@@ -4966,7 +4440,7 @@
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {
-					"url": "[parameters('HttpServer1_properties_typeProperties_url')]",
+					"url": "https://jsonplaceholder.typicode.com",
 					"enableServerCertificateValidation": true,
 					"authenticationType": "Anonymous"
 				}
@@ -4981,37 +4455,12 @@
 				"annotations": [],
 				"type": "RestService",
 				"typeProperties": {
-					"url": "[parameters('RestService1_properties_typeProperties_url')]",
+					"url": "https://jsonplaceholder.typicode.com",
 					"enableServerCertificateValidation": true,
 					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "B",
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('SqlServer1_connectionString')]",
-					"userName": "[parameters('SqlServer1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SqlServer1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime2",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime2')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copie de fichiers - Blog - trigger')]",
@@ -5027,7 +4476,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sinkBlobContainer": "[parameters('Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer')]"
+							"sinkBlobContainer": "bamakstockage"
 						}
 					}
 				],
@@ -5059,7 +4508,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"NomBase": "[parameters('Run pip MASTER_properties_Master_parameters_NomBase')]"
+							"NomBase": "MaBase"
 						}
 					}
 				],
@@ -5091,8 +4540,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sinkBlobContainer": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer')]",
-							"receiver": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_receiver')]"
+							"sinkBlobContainer": "adfv2branch",
+							"receiver": "chrisherv@gmail.com"
 						}
 					}
 				],
@@ -5126,46 +4575,6 @@
 						"interval": 1,
 						"startTime": "2019-11-16T12:27:00Z",
 						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime2')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime3')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "West Europe",
-						"nodeSize": "Standard_D4_v2",
-						"numberOfNodes": 2,
-						"maxParallelExecutionsPerNode": 1
-					},
-					"ssisProperties": {
-						"catalogInfo": {
-							"catalogServerEndpoint": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]",
-							"catalogAdminUserName": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName')]",
-							"catalogAdminPassword": {
-								"type": "SecureString",
-								"value": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
-							},
-							"catalogPricingTier": "Basic"
-						},
-						"edition": "Standard",
-						"licenseType": "LicenseIncluded"
 					}
 				}
 			},

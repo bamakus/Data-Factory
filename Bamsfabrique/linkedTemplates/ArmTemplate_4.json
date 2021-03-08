@@ -1,0 +1,1468 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nom de fabrique de données",
+			"defaultValue": "Bamsfabrique"
+		},
+		"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
+			"type": "string",
+			"defaultValue": "bamakstockage"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer": {
+			"type": "string",
+			"defaultValue": "adfv2branch"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_receiver": {
+			"type": "string",
+			"defaultValue": "chrisherv@gmail.com"
+		},
+		"Run pip MASTER_properties_Master_parameters_NomBase": {
+			"type": "string",
+			"defaultValue": "MaBase"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/test lookup')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Produits2_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						},
+						{
+							"dataset": {
+								"referenceName": "Produits_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureBlob_Folder_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Lookup1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Aggregate1"
+						},
+						{
+							"name": "Filter2"
+						}
+					],
+					"script": "source(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nAggregate1, source1 lookup(Aggregate1@Produit == source1@Produit,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nFilter2 select(mapColumn(\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tcomptage = count(Produit)) ~> Aggregate1\nLookup1 filter(!isNull(source1@Produit) &&comptage == 1) ~> Filter2\nSelect1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Produits3.csv'],\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copie-Incremental-SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupOldWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * from watermarktable",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "WatermarkDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LookupNewWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SourceDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "IncrementalCopyActivity",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LookupNewWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LookupOldWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "[[dbo].[data_source_table]"
+							},
+							{
+								"name": "Destination",
+								"value": "adfv2branch/@{CONCAT('Incremental-', pipeline().RunId, '.txt')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureBlob4_ABS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "StoredProceduretoWriteWatermarkActivity",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "IncrementalCopyActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[sp_write_watermark]",
+							"storedProcedureParameters": {
+								"LastModifiedtime": {
+									"value": {
+										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
+										"type": "Expression"
+									},
+									"type": "datetime"
+								},
+								"TableName": {
+									"value": {
+										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServer1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopieVentes-Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "[[dbo].[Ventes]"
+							},
+							{
+								"name": "Destination",
+								"value": "@{pipeline().parameters.sinkBlobContainer}/@{CONCAT(pipeline().RunId, '.txt')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * from Ventes",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_Ventes_i_ojw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureBlob2_ABS",
+								"type": "DatasetReference",
+								"parameters": {
+									"path": {
+										"value": "@pipeline().parameters.sinkBlobContainer",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "NotificationSuccess",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-04.northeurope.logic.azure.com:443/workflows/aacb3517ccc4448caeabd027bef823f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c75baHOYmu-seRk18dxojF4Uu732zEpFUlTFHl3DzdU",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"message": "@{activity('Copy1').output.dataWritten}",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@pipeline().parameters.receiver"
+							}
+						}
+					},
+					{
+						"name": "NotificationFail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy1",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-00.northeurope.logic.azure.com:443/workflows/7bd654e9a315448bb4fee2d2586d3828/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Jv2oCPgGoW5RvJgqYAhx38KNWSBfTI3vEa--mug5emg",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"message": "@{activity('Copy1').error.message}",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@pipeline().parameters.receiver"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"sinkBlobContainer": {
+						"type": "String"
+					},
+					"receiver": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopieVentes-SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy-dbo_Ventes",
+						"description": "Test",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK from [dbo].[Ventes] A \nLeft JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente \nwhere [Date_facture] \n>= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Date_facture] < '@{formatDateTime(pipeline().parameters.windowEnd,\n 'yyyy-MM-dd HH:mm' )}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Client_FK": "Client_FK",
+									"CA": "CA",
+									"Budget": "Budget",
+									"Date_facture": "Date_facture",
+									"Type_Vente_FK": "Type_Vente_FK"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_Ventes_i_aqz",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dbo_Ventes_o_ojw",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": "Mabase"
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ETL-SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy-dbo_DimClient",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select *, cast(null as date) as datedebut , cast(null as date) as datefin, cast(null as int) as currentrow,getdate() as lastupdate   from [dbo].[DimClient]",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete dbo.DimClient"
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Client_PK": "Client_PK",
+									"ClientCode": "ClientCode",
+									"Client": "Client",
+									"TypeClient": "TypeClient",
+									"SegmentationClient": "SegmentationClient",
+									"datedebut": "DateDebut",
+									"datefin": "DateFin",
+									"currentrow": "IsRowCurrent",
+									"lastupdate": "LastUpdated"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_DimClient_i_aqz",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dbo_DimClient_o_aqz",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": {
+										"value": "@pipeline().parameters.NomBase",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy-dbo_Ventes",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy-dbo-type_vente",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "Select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK  from [dbo].[Ventes]  A Left JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente  Where \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "delete dbo.Ventes where  \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Client_FK": "Client_FK",
+									"CA": "CA",
+									"Budget": "Budget",
+									"Date_facture": "Date_facture",
+									"Type_Vente_FK": "Type_Vente_FK"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_Ventes_i_aqz",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dbo_Ventes_o_aqz",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": {
+										"value": "@pipeline().parameters.NomBase",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy-dbo-type_vente",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy-dbo_DimClient",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * from DimTypeVente",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete DimTypeVente"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Type_Vente_PK": "Type_Vente_PK",
+									"Type_Vente": "Type_Vente"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_DimTypeVente_i_aqz",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dbo_DimTypeVente_o_aqz",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": {
+										"value": "@pipeline().parameters.NomBase",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					},
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"NomBase": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Iterations_Copie_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Paramètre pipeline = Liste de tables (type objet) \nBoucle sur objet \nLe nom de la table réceptacle est variabilisé",
+				"activities": [
+					{
+						"name": "IterationTablesSQL",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.tableList",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlSource",
+											"sqlReaderQuery": {
+												"value": "SELECT * FROM [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+												"type": "Expression"
+											},
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000,
+											"preCopyScript": {
+												"value": "TRUNCATE TABLE [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+												"type": "Expression"
+											}
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0
+									},
+									"inputs": [
+										{
+											"referenceName": "Table_source_SQL",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Table_target_SQL",
+											"type": "DatasetReference",
+											"parameters": {
+												"DWTableName": "[[@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+												"NomBase": "MaBase"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"tableList": {
+						"type": "Object"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LoadFacts21')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data Flow Fact Loader",
+						"description": "This is a data flow example of how to load facts into your fact table from a single sample Employee dimension. There is also an example of handling early-arriving facts.",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF-FactLoader1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Facts": {},
+									"DimEmployee": {
+										"NomBase": "MaBase"
+									},
+									"writeFactTable": {
+										"NomBase": "MaBase"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MovieDemoPipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ExecuteMovieDemoDataFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MovieDemo1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Movies": {},
+									"Output": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test Data Flow UPSERT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Test SQL UPSERT",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Test SQL UPSERT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"target": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test Data Flow lookup 2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF test Lk",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "test lookup 2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test Data Flow lookup')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF test Lk",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "test lookup",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/test lookup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test_Conversion_Types')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Conversion Auto \nnvarchar --> int ou num ou date\nErreur si typage incorrect",
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "truncate table dbo.DTF2_Test_Conversion_O"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "col1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "col1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "col2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "col2",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "col3",
+											"type": "String"
+										},
+										"sink": {
+											"name": "col3",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "col4",
+											"type": "String"
+										},
+										"sink": {
+											"name": "col4",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SqlServerv_DTF2_I",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerv_DTF2_O",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test_if')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Test_if",
+				"activities": [
+					{
+						"name": "MyIfCondition",
+						"description": "aa",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@bool(pipeline().parameters.routeSelection)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "CopyFromBlobToBlob2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlSource",
+											"sqlReaderQuery": "select * from ventes",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "BlobSink"
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0,
+										"translator": {
+											"type": "TabularTranslator",
+											"columnMappings": {
+												"Budget": "Budget",
+												"Date_facture": "Date_facture",
+												"Type_Vente": "Type_Vente",
+												"CA": "CA",
+												"Client_FK": "Client_FK"
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dbo_Ventes_i_ojw",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureBlob2_ABS",
+											"type": "DatasetReference",
+											"parameters": {
+												"path": "@pipeline().parameters.outputPath2"
+											}
+										}
+									]
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "CopyFromBlobToBlob1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlSource",
+											"sqlReaderQuery": "select * from ventes",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "BlobSink"
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0,
+										"translator": {
+											"type": "TabularTranslator",
+											"columnMappings": {
+												"Budget": "Budget",
+												"Date_facture": "Date_facture",
+												"Type_Vente": "Type_Vente",
+												"CA": "CA",
+												"Client_FK": "Client_FK"
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dbo_Ventes_i_ojw",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureBlob2_ABS",
+											"type": "DatasetReference",
+											"parameters": {
+												"path": "@pipeline().parameters.outputPath1"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"outputPath1": {
+						"type": "String"
+					},
+					"outputPath2": {
+						"type": "String"
+					},
+					"routeSelection": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copie de fichiers - Blog - trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copie de Fichiers - Blob",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sinkBlobContainer": "[parameters('Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2021-03-07T17:58:00",
+						"timeZone": "Romance Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Master - Test Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Test Data Flow lookup",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Test Data Flow lookup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Master')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select '2018-02-01'  as datedeb ,  '2018-05-31'   as datefin\n\n",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dbo_DimClient_i_aqz",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ETL-SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"windowStart": {
+									"value": "@{activity('Lookup1').output.firstRow.datedeb}",
+									"type": "Expression"
+								},
+								"windowEnd": {
+									"value": "@{activity('Lookup1').output.firstRow.datefin}",
+									"type": "Expression"
+								},
+								"NomBase": {
+									"value": "@pipeline().parameters.NomBase",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"NomBase": {
+						"type": "string",
+						"defaultValue": "MaBase"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ETL-SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Master_Liste_tables_a_copier')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Liste_tables_source",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES \nWHERE TABLE_NAME IN ('DimTypeVente' , 'DimClient')",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Table_source_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Liste_tables_source",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Iterations_Copie_Table",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"tableList": {
+									"value": "@activity('Liste_tables_source').output.value",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Iterations_Copie_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger avec param')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CopieVentes-Blob",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sinkBlobContainer": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer')]",
+							"receiver": "[parameters('Trigger avec param_properties_CopieVentes-Blob_parameters_receiver')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2019-09-22T14:21:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CopieVentes-Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Run pip MASTER')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Master",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"NomBase": "[parameters('Run pip MASTER_properties_Master_parameters_NomBase')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2020-07-09T15:58:00",
+						"timeZone": "W. Europe Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Master')]"
+			]
+		}
+	]
+}

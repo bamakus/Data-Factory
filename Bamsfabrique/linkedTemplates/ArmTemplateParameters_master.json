@@ -8,6 +8,12 @@
 		"AzureBlob_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureFunction1_functionKey": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
@@ -17,29 +23,86 @@
 		"SqlServer1_password": {
 			"value": ""
 		},
-		"AzureBlob2_properties_typeProperties_fileName": {
+		"AzureBlob2_ABS_properties_typeProperties_fileName": {
 			"value": "@CONCAT(pipeline().RunId, '.txt')"
 		},
-		"AzureBlob2_properties_typeProperties_folderPath": {
+		"AzureBlob2_ABS_properties_typeProperties_folderPath": {
 			"value": "@{dataset().path}"
 		},
-		"AzureBlob3_properties_typeProperties_folderPath": {
+		"AzureBlob3_ABS_properties_typeProperties_fileName": {
+			"value": "@dataset().filename"
+		},
+		"AzureBlob3_ABS_properties_typeProperties_folderPath": {
 			"value": "adfv2branch"
 		},
-		"SinkDataset_properties_typeProperties_fileName": {
+		"AzureBlob4_ABS_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
 		},
-		"SinkDataset_properties_typeProperties_folderPath": {
+		"AzureBlob4_ABS_properties_typeProperties_folderPath": {
 			"value": "adfv2branch"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_fileName": {
+			"value": "@dataset().filename"
+		},
+		"AzureBlobStorageDataDestination_File_ABS_properties_typeProperties_folderPath": {
+			"value": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_fileName": {
+			"value": "@dataset().filename"
+		},
+		"AzureBlobStorageDataSource_File_ABS_properties_typeProperties_folderPath": {
+			"value": "@dataset().path"
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"AzureBlobStorageDataSource_Folder_ABS_properties_typeProperties_folderPath": {
+			"value": "@dataset().FolderPath"
+		},
+		"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
+			"value": "@{dataset().path}"
+		},
+		"Orders_Json_ABS_properties_typeProperties_fileName": {
+			"value": "orders.json"
+		},
+		"Orders_Json_ABS_properties_typeProperties_folderPath": {
+			"value": "adfv2branch"
+		},
+		"Produit_Json_ABS_properties_typeProperties_fileName": {
+			"value": "produit.json"
+		},
+		"Produit_Json_ABS_properties_typeProperties_folderPath": {
+			"value": "adfv2branch"
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"value": "https://bamakapp2.azurewebsites.net"
+		},
+		"CoffreDFV2_properties_typeProperties_baseUrl": {
+			"value": "https://MonCoffre2.vault.azure.net/"
+		},
+		"HttpLinkedService_properties_typeProperties_url": {
+			"value": "https://oc-jswebsrv.herokuapp.com/api/articles"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"value": "https://jsonplaceholder.typicode.com"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"value": "https://jsonplaceholder.typicode.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"value": "MONSERVEUR\\Administrator"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowStart": {
-			"value": "@trigger().outputs.windowStartTime"
+		"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
+			"value": "bamakstockage"
 		},
-		"trigger_CopyPipeline_ojw_properties_pipeline_parameters_windowEnd": {
-			"value": "@trigger().outputs.windowEndTime"
+		"Run pip MASTER_properties_Master_parameters_NomBase": {
+			"value": "MaBase"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_sinkBlobContainer": {
+			"value": "adfv2branch"
+		},
+		"Trigger avec param_properties_CopieVentes-Blob_parameters_receiver": {
+			"value": "chrisherv@gmail.com"
 		},
 		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "bamak.database.windows.net"

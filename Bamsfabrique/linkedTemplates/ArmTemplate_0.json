@@ -4,24 +4,44 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Nom de fabrique de données",
 			"defaultValue": "Bamsfabrique"
 		},
 		"AzureBlob_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlob'"
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlob »"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
+		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Chaîne sécurisée pour « functionKey » de « AzureFunction1 »"
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureSqlDatabase1 »"
 		},
-		"SqlServer1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://bamakapp2.azurewebsites.net"
 		},
-		"SqlServer1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		"CoffreDFV2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://MonCoffre2.vault.azure.net/"
+		},
+		"HttpLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://oc-jswebsrv.herokuapp.com/api/articles"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jsonplaceholder.typicode.com"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jsonplaceholder.typicode.com"
 		},
 		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -34,35 +54,360 @@
 		"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
-		"AzureBlob2_properties_typeProperties_fileName": {
+		"AzureBlob2_ABS_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT(pipeline().RunId, '.txt')"
 		},
-		"AzureBlob2_properties_typeProperties_folderPath": {
+		"AzureBlob2_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@{dataset().path}"
 		},
-		"AzureBlob3_properties_typeProperties_folderPath": {
+		"AzureBlob3_ABS_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().filename"
+		},
+		"AzureBlob3_ABS_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "adfv2branch"
-		},
-		"SinkDataset_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
-		},
-		"SinkDataset_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "adfv2branch"
-		},
-		"SqlServer1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "MONSERVEUR\\Administrator"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Outlook token')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GET API Token",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://login.microsoftonline.com/0d26a3f8-4ec1-4167-bdb5-1305046557b2/oauth2/v2.0/token",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded"
+							},
+							"body": {
+								"value": "grant_type=authorization_code&code=OAQABAAIAAACQN9QBRU3jT6bcBQLZNUj7kXbkXukSOEe_3EwmqQVFm59SL1or3JeC-xKND6PphpKYi71RebYufBCqb9P9YgsmtFb03jNQvWRWswOWvEgInAhyM2fBYgfQ--yWP6T50EstWOWk8ow2DcA4K3taqWgM8t7klqb-A2oAkAXuLJ-b5rlcj_bYnkIhrmxpqwayQwEDpH6NN0uBxYW1Bgyk52RZKESjibQXElF6UzN6ixNlTh9STOO-nrZIoQ1u3gUdth3OJIhg_-Avl3laM2BKy5ghFMZmJmy9cYUQyUj5b66Z1OC4GjflDGtQ9E8sNFl86nsgy-TnW1w0ziPRK_5o4ezQYhZd7Q98VQwCwmPLex72FwEeZejjP9-CPaxK1_IFXAVGDdFnuqeT17HlZUKdXBxt-bCWBZwDeEzMObZEcpi3VuBcIAObkFb03OPmA4QwxCzjReoA8vuZDqS0-maLar8fhjZoZ9AgFk9CJ4eGwO_-aICarDf_9JbEQc7eSr4yMkpEYGlRqgkzPo2iimZ-AUdfENXHIdcFMZeDbxFrLivBqwUqZ5ZpSNy8zVCOVuHQvVa0DpsHRXcnH02BASr71oVamNYiQXRFMkMpMHfDpQOQFnV2rRGMKEckyEyzmrtISV4AOJUZlnOSMdvrg0YcG8PgCYlzSbc6dPgLsBsmAre-4eSqdsDzdCL8e5am13cnuAS9sru8Z1_ero8P8-bZ7D2tIhq7jah_6Xn319dGbmotbNmVE8VxNbtm04rRsbJCjOFbu1_CE_vCFcQ8j5P0ZlFU3ch-1ZHT_jAlqT42kLmnQYHTw6OV6VmU903HpvEs-vOznUlSGtAJCPgz5jK7_iN86EeYb1nAR2RWmJPnv3vPmBuSbyVOv769k8MWl0E7O1_qDhuTfEQd13gOEyuS8KMxy7mjRN1LsNvdpO2InAnqfJRUSEHWs2zS4-RgXrOq4yJr1cfYbmF8bNvx4oeIX9cPqrjTREa5wYtPepMxYGexaaSeEup0AN6iUTi6rW7GkUDFHnFVdRWltqiolfKDr6iGHR-kKopgpzz8SRL_mnqeUjjyIePOPVb_1V8XC6O_N1qwtnpbXYhDATzJnl_xZfYo40PX73CfrEGqbkRw1YK5IrV6pP2THCoA-kN9Zq4RTeB_BtamfcIBLvcMYaCrhLX_zRXhcuqw9UwVV7r6FNezml-2TpeBYwAvqrjtaofDXfQa_dUdi4oa0F66AbxdL1CpIAA&session_state=cc8b588f-80bc-4aeb-8453-6b701bd99dfe&redirect_uri=https://login.microsoftonline.com/common/oauth2/nativeclient&client_id=01c0b191-65c5-4e0b-90a4-3015d2c5521f&client_secret=8BbKJa_iZ4NCAmD.-o]CsHgUxdJQGH73",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Http"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProcessAASAutomation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://s9events.azure-automation.net/webhooks?token=yqimwu2V0%2fWuk6b24fkOhBKW6Mos0%2fbG%2fBwCw%2fFVLnI%3d",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "hello world"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Azure AS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProcessAzureAS MSI')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UntilRefreshComplete",
+						"type": "Until",
+						"dependsOn": [
+							{
+								"activity": "FilterToCurrentRefresh",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@not(equals(activity('GetAzureASRefreshStatus').output.status,'inProgress'))",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "GetAzureASRefreshStatus",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "Wait30Seconds",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://',pipeline().parameters.Region,'.asazure.windows.net/servers/',pipeline().parameters.Server,'/models/',pipeline().parameters.DatabaseName,'/refreshes/',activity('FilterToCurrentRefresh').output.Value[0].refreshId)",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://*.asazure.windows.net"
+										}
+									}
+								},
+								{
+									"name": "Wait30Seconds",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 30
+									}
+								}
+							],
+							"timeout": "7.00:00:00"
+						}
+					},
+					{
+						"name": "StartProcessingAzureAS",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat('https://',pipeline().parameters.Region,'.asazure.windows.net/servers/',pipeline().parameters.Server,'/models/',pipeline().parameters.DatabaseName,'/refreshes')",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"Type": "Full",
+								"CommitMode": "transactional",
+								"MaxParallelism": 10,
+								"RetryCount": 2
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://*.asazure.windows.net"
+							}
+						}
+					},
+					{
+						"name": "IfFailed",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "UntilRefreshComplete",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(activity('GetAzureASRefreshStatus').output.status,'failed')",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ThrowErrorOnFailure",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@string(activity('GetAzureASRefreshStatus').output)",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetAzureASRefreshes",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "StartProcessingAzureAS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat('https://',pipeline().parameters.Region,'.asazure.windows.net/servers/',pipeline().parameters.Server,'/models/',pipeline().parameters.DatabaseName,'/refreshes')",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {},
+							"body": {
+								"Type": "Full",
+								"CommitMode": "transactional",
+								"MaxParallelism": 10,
+								"RetryCount": 2
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://*.asazure.windows.net"
+							}
+						}
+					},
+					{
+						"name": "FilterToCurrentRefresh",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "GetAzureASRefreshes",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@json(activity('GetAzureASRefreshes').output.Response)",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@greaterOrEquals(item().startTime,addseconds(activity('StartProcessingAzureAS').output.startTime,-30))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"TenantID": {
+						"type": "String"
+					},
+					"SubscriptionID": {
+						"type": "String"
+					},
+					"Region": {
+						"type": "String"
+					},
+					"Server": {
+						"type": "String"
+					},
+					"DatabaseName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Azure AS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TEST WAIT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "Wait1_copy",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Wait",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Test_parametres')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -73,7 +418,12 @@
 						"name": "Set Variable1",
 						"type": "SetVariable",
 						"dependsOn": [],
-						"userProperties": [],
+						"userProperties": [
+							{
+								"name": "Toto",
+								"value": "France"
+							}
+						],
 						"typeProperties": {
 							"variableName": "Mon_nom",
 							"value": "\"Marcel\""
@@ -82,10 +432,13 @@
 				],
 				"variables": {
 					"Mon_nom": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "Romeo"
 					}
 				},
-				"annotations": []
+				"annotations": [
+					"Bamakus"
+				]
 			},
 			"dependsOn": []
 		},
@@ -103,14 +456,129 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureFunction1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]",
+					"functionKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CoffreDFV2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "test",
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('CoffreDFV2_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HttpLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('HttpLinkedService_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HttpServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('HttpServer1_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RestService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('RestService1_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "copie fichiers",
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2019-11-16T12:27:00Z",
+						"timeZone": "UTC"
+					}
 				}
 			},
 			"dependsOn": []
@@ -156,7 +624,89 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlob2')]",
+			"name": "[concat(parameters('factoryName'), '/Test run function')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Azure Function1",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "HttpTrigger1",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"name": "Tata"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureFunction1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Functions"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureFunction1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test run function2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Azure Function",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "HttpTrigger1",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"name": "Bamakus"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureFunction1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Functions"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureFunction1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlob2_ABS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -199,11 +749,11 @@
 						"firstRowAsHeader": false
 					},
 					"fileName": {
-						"value": "[parameters('AzureBlob2_properties_typeProperties_fileName')]",
+						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_fileName')]",
 						"type": "Expression"
 					},
 					"folderPath": {
-						"value": "[parameters('AzureBlob2_properties_typeProperties_folderPath')]",
+						"value": "[parameters('AzureBlob2_ABS_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
 				}
@@ -213,7 +763,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlob3')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlob3_ABS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -221,543 +771,53 @@
 					"referenceName": "AzureBlob",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
+				"structure": [
+					{
+						"name": "userId",
+						"type": "String"
 					},
-					"folderPath": "[parameters('AzureBlob3_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SinkDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlob",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "body",
+						"type": "String"
+					}
+				],
 				"typeProperties": {
 					"format": {
 						"type": "TextFormat",
 						"columnDelimiter": ",",
 						"rowDelimiter": "",
-						"nullValue": "\\N",
+						"nullValue": {
+							"value": "@concat('')",
+							"type": "Expression"
+						},
 						"treatEmptyAsNull": true,
 						"skipLineCount": 0,
-						"firstRowAsHeader": false
+						"firstRowAsHeader": true
 					},
 					"fileName": {
-						"value": "[parameters('SinkDataset_properties_typeProperties_fileName')]",
+						"value": "[parameters('AzureBlob3_ABS_properties_typeProperties_fileName')]",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('SinkDataset_properties_typeProperties_folderPath')]"
+					"folderPath": "[parameters('AzureBlob3_ABS_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Table_target')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"DWTableName": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"typeProperties": {
-					"tableName": {
-						"value": "@{dataset().DWTableName}",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimClient_o_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Client_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "ClientCode",
-						"type": "String"
-					},
-					{
-						"name": "Client",
-						"type": "String"
-					},
-					{
-						"name": "TypeClient",
-						"type": "String"
-					},
-					{
-						"name": "SegmentationClient",
-						"type": "String"
-					},
-					{
-						"name": "DateDebut",
-						"type": "DateTime"
-					},
-					{
-						"name": "DateFin",
-						"type": "DateTime"
-					},
-					{
-						"name": "IsRowCurrent",
-						"type": "Int32"
-					},
-					{
-						"name": "LastUpdated",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[DimClient]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_o_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Type_Vente_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[DimTypeVente]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente_FK",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[Ventes]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_ojw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Client_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "CA",
-						"type": "Decimal"
-					},
-					{
-						"name": "Budget",
-						"type": "Decimal"
-					},
-					{
-						"name": "Date_facture",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type_Vente_FK",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[Ventes]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('SqlServer1_connectionString')]",
-					"userName": "[parameters('SqlServer1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SqlServer1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime2",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copie de Fichiers - Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "https://hk.saowen.com/a/2a1ceb923605903a033b4b0d988068987720d1c9324cb285f76acfae564f65b1",
-				"activities": [
-					{
-						"name": "Liste_des_fichiers",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "AzureBlob3",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							]
-						}
-					},
-					{
-						"name": "Alimentation_tab",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Liste_des_fichiers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Liste_des_fichiers').output.childitems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Append Variable1",
-									"type": "AppendVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "var_file_list",
-										"value": {
-											"value": "concat('adfv2branch/',item().name)",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lecture_tab",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Alimentation_tab",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('var_file_list')",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Set Variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "resultat",
-										"value": "OK"
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"sinkBlobContainer": {
-						"type": "String"
-					}
-				},
-				"variables": {
-					"var_file_list": {
-						"type": "Array"
-					},
-					"resultat": {
-						"type": "String",
-						"defaultValue": "KO"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureBlob3')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[data_source_table]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Table_source')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WatermarkDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[watermarktable]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimClient_i_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Client_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "GeographieClient_FK",
-						"type": "Int32"
-					},
-					{
-						"name": "ClientCode",
-						"type": "String"
-					},
-					{
-						"name": "Client",
-						"type": "String"
-					},
-					{
-						"name": "TypeClient",
-						"type": "String"
-					},
-					{
-						"name": "SegmentationClient",
-						"type": "String"
-					},
-					{
-						"name": "lettre UNICODE",
-						"type": "String"
-					},
-					{
-						"name": "Lettre ASCII",
-						"type": "String"
-					},
-					{
-						"name": "datedebut",
-						"type": "DateTime"
-					},
-					{
-						"name": "datefin",
-						"type": "DateTime"
-					},
-					{
-						"name": "currentrow",
-						"type": "Int32"
-					},
-					{
-						"name": "lastupdate",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[DimClient]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_i_aqz')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Type_Vente_PK",
-						"type": "Int32"
-					},
-					{
-						"name": "Type_Vente",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[DimTypeVente]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
 			]
 		}
 	]
