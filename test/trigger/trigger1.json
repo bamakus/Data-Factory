@@ -4,23 +4,7 @@
 		"description": "copie fichiers",
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Copie de Fichiers - Blob",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sinkBlobContainer": "adfv2branch"
-				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "ETL-SQL",
-					"type": "PipelineReference"
-				}
-			}
-		],
+
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {

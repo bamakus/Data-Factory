@@ -20,6 +20,9 @@
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
 						}
 					},
 					"sink": {
@@ -68,65 +71,46 @@
 						"recursive": true
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"tableOption": "autoCreate"
+						"type": "AzureSqlSink"
 					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
+								"source": {
+									"name": "userId"
+								},
 								"sink": {
-									"name": "Client_PK",
-									"type": "int"
+									"name": "userId",
+									"type": "String"
 								}
 							},
 							{
+								"source": {
+									"name": "id"
+								},
 								"sink": {
-									"name": "ClientCode",
-									"type": "varchar"
+									"name": "id",
+									"type": "String"
 								}
 							},
 							{
+								"source": {
+									"name": "title"
+								},
 								"sink": {
-									"name": "Client",
-									"type": "varchar"
+									"name": "title",
+									"type": "String"
 								}
 							},
 							{
+								"source": {
+									"name": "body"
+								},
 								"sink": {
-									"name": "TypeClient",
-									"type": "varchar"
-								}
-							},
-							{
-								"sink": {
-									"name": "SegmentationClient",
-									"type": "varchar"
-								}
-							},
-							{
-								"sink": {
-									"name": "DateDebut",
-									"type": "datetime"
-								}
-							},
-							{
-								"sink": {
-									"name": "DateFin",
-									"type": "datetime"
-								}
-							},
-							{
-								"sink": {
-									"name": "IsRowCurrent",
-									"type": "int"
-								}
-							},
-							{
-								"sink": {
-									"name": "LastUpdated",
-									"type": "datetime"
+									"name": "body",
+									"type": "String"
 								}
 							}
 						]
@@ -144,7 +128,10 @@
 				"outputs": [
 					{
 						"referenceName": "AzureSqlTable2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"NomBase": "DistrisysDW"
+						}
 					}
 				]
 			}

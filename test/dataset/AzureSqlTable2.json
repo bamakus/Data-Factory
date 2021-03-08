@@ -18,9 +18,26 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "userId",
+				"type": "varchar"
+			},
+			{
+				"name": "id",
+				"type": "varchar"
+			},
+			{
+				"name": "title",
+				"type": "varchar"
+			},
+			{
+				"name": "body",
+				"type": "varchar"
+			}
+		],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": "MaBase",
 			"table": "Test_REST"
 		}
 	}

@@ -1,26 +1,26 @@
 {
-	"name": "Run pip MASTER",
+	"name": "Copie de fichiers - Blog - trigger",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Master",
+					"referenceName": "Copie de Fichiers - Blob",
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"NomBase": "MaBase"
+					"sinkBlobContainer": "bamakstockage"
 				}
 			}
 		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
+				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-07-09T15:58:00",
-				"timeZone": "W. Europe Standard Time"
+				"startTime": "2021-03-07T17:58:00",
+				"timeZone": "Romance Standard Time"
 			}
 		}
 	}

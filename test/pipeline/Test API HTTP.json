@@ -27,6 +27,9 @@
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
 						}
 					},
 					"sink": {
@@ -77,7 +80,14 @@
 			{
 				"name": "Fabrication URL",
 				"type": "SetVariable",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Viewer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "URL",
@@ -112,6 +122,9 @@
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
 						}
 					},
 					"sink": {
@@ -134,10 +147,72 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Nom pipeline",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name",
+					"value": {
+						"value": "@pipeline().DataFactory",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Nom pipeline2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Nom pipeline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name2",
+					"value": {
+						"value": "@concat('''nom pipeline :''' , variables('Name'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Viewer",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Nom pipeline2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name3",
+					"value": {
+						"value": "@variables('Name2')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
 			"URL": {
+				"type": "String"
+			},
+			"Name": {
+				"type": "String"
+			},
+			"Name2": {
+				"type": "String"
+			},
+			"Name3": {
 				"type": "String"
 			}
 		},
