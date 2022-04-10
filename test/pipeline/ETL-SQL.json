@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy-dbo_DimClient",
+				"description": "aa",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -15,7 +16,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "select *, cast(null as date) as datedebut , cast(null as date) as datefin, cast(null as int) as currentrow,getdate() as lastupdate   from [dbo].[DimClient]"
+						"sqlReaderQuery": "select *, cast(null as date) as datedebut , cast(null as date) as datefin, cast(null as int) as currentrow,getdate() as lastupdate   from [dbo].[DimClient]",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -82,7 +84,8 @@
 						"sqlReaderQuery": {
 							"value": "Select A.* , ISNULL(B.Type_Vente_PK,0) as Type_Vente_FK  from [dbo].[Ventes]  A Left JOIN [dbo].[DimTypeVente] B ON A.Type_Vente = B.Type_vente  Where \nconvert(varchar(10) ,date_facture ,121) >= '@{pipeline().parameters.windowStart}' AND convert(varchar(10) ,date_facture ,121) < '@{pipeline().parameters.windowEnd}'",
 							"type": "Expression"
-						}
+						},
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -144,7 +147,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "select * from DimTypeVente"
+						"sqlReaderQuery": "select * from DimTypeVente",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlSink",
