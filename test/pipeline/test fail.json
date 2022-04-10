@@ -1,0 +1,19 @@
+{
+	"name": "test fail",
+	"properties": {
+		"description": "fail",
+		"activities": [
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Error occured ...",
+					"errorCode": "3000"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
