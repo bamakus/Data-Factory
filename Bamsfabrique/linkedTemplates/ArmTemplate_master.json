@@ -186,9 +186,6 @@
 					"AzureFunction1_functionKey": {
 						"value": "[parameters('AzureFunction1_functionKey')]"
 					},
-					"AzureSqlDatabase1_connectionString": {
-						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
-					},
 					"AzureFunction1_properties_typeProperties_functionAppUrl": {
 						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
 					},
@@ -301,6 +298,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
 					"SqlServer1_connectionString": {
 						"value": "[parameters('SqlServer1_connectionString')]"

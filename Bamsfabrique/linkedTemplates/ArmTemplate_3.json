@@ -13,733 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Parsing JSON')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "https://medium.com/@gary.strange/flattening-json-in-azure-data-factory-2f2130794258\n\nTest d'intégration de fichiers JSON\nAvec gestion de tags non transmis\nJSON2 semble parfait (gestion sous ensemble & tag non transmis)\nProcess API JSON --> fic json2 --> cible CSV (blanc)--> SQL ",
-				"activities": [
-					{
-						"name": "Copy JSON1",
-						"description": "Copie fic json --> CSV\nSans gestion tableaux (source json)\nPas de gestion des colonnes non transmises",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Orders_Json",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "res_json1.csv"
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy JSON2",
-						"description": "Copie fic json --> CSV\nAvec gestion tableaux (Source Azure Blob Storage)\nGestion des colonnes non transmises\nvia concat('')\nAttention pas de mapping à ce niveau",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Orders_Json_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "res_json2.csv"
-								}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Json"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SFCC Token')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "GET API Token",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Set variable1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://demo-eu01-happening.demandware.net/dw/oauth2/access_token?client_id=9c4123ef-c5ad-464c-83b5-0dd12282ef22&grant_type=urn:demandware:params:oauth:grant-type:client-id:dwsid:dwsecuretoken",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
-							},
-							"body": {
-								"value": "username=@{pipeline().parameters.username}\n&password=@{pipeline().parameters.password}",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Recherche param",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
-							},
-							"dataset": {
-								"referenceName": "Login_Json",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Recherche param",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "login",
-							"value": {
-								"value": "@activity('Recherche param').output.firstRow.username",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Set variable1_copy1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "password",
-							"value": {
-								"value": "@activity('Recherche param').output.firstRow.password",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"username": {
-						"type": "string",
-						"defaultValue": "admin"
-					},
-					"password": {
-						"type": "string",
-						"defaultValue": "BoumEU2019!:Boum2019!"
-					}
-				},
-				"variables": {
-					"login": {
-						"type": "String"
-					},
-					"password": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Http"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test API HTTP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Data JSON",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Viewer API",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET"
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "URL_Http_Json",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Produit_Json_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Viewer API",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Fabrication URL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@variables('URL')",
-								"type": "Expression"
-							},
-							"method": "GET",
-							"headers": {}
-						}
-					},
-					{
-						"name": "Fabrication URL",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Viewer",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "URL",
-							"value": {
-								"value": "@concat('https://oc-jswebsrv.herokuapp.com/api/','articles')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Copy Data TXT",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Viewer API",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET"
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "URL_Http_Json",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "json_http.txt"
-								}
-							}
-						]
-					},
-					{
-						"name": "Nom pipeline",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Name",
-							"value": {
-								"value": "@pipeline().DataFactory",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Nom pipeline2",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Nom pipeline",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Name2",
-							"value": {
-								"value": "@concat('''nom pipeline :''' , variables('Name'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Viewer",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Nom pipeline2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Name3",
-							"value": {
-								"value": "@variables('Name2')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"variables": {
-					"URL": {
-						"type": "String"
-					},
-					"Name": {
-						"type": "String"
-					},
-					"Name2": {
-						"type": "String"
-					},
-					"Name3": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Http"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test API HTTP2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data API",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET"
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "URL_Http_Json2",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "json_http2.csv"
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy data SQL",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy data API",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "userId"
-										},
-										"sink": {
-											"name": "userId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "id"
-										},
-										"sink": {
-											"name": "id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "title"
-										},
-										"sink": {
-											"name": "title",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "body"
-										},
-										"sink": {
-											"name": "body",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "json_http2.csv"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureSqlTable2",
-								"type": "DatasetReference",
-								"parameters": {
-									"NomBase": "DistrisysDW"
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"token": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Http"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test API REST')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "URL_Resource1_REST",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob3_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": "rest_http.txt"
-								}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Http"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test API REST2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "URL_Resource1_REST",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureSqlTable2",
-								"type": "DatasetReference",
-								"parameters": {
-									"NomBase": "DistrisysDW"
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"token": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Http"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_SQL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -847,6 +120,40 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Table_target_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"DWTableName": {
+						"type": "String"
+					},
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@{dataset().DWTableName}",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/WatermarkDataset_SQL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -931,6 +238,72 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dbo_DimClient_o_aqz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Client_PK",
+						"type": "Int32"
+					},
+					{
+						"name": "ClientCode",
+						"type": "String"
+					},
+					{
+						"name": "Client",
+						"type": "String"
+					},
+					{
+						"name": "TypeClient",
+						"type": "String"
+					},
+					{
+						"name": "SegmentationClient",
+						"type": "String"
+					},
+					{
+						"name": "DateDebut",
+						"type": "DateTime"
+					},
+					{
+						"name": "DateFin",
+						"type": "DateTime"
+					},
+					{
+						"name": "IsRowCurrent",
+						"type": "Int32"
+					},
+					{
+						"name": "LastUpdated",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[DimClient]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_i_aqz')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -941,6 +314,44 @@
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Type_Vente_PK",
+						"type": "Int32"
+					},
+					{
+						"name": "Type_Vente",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[DimTypeVente]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dbo_DimTypeVente_o_aqz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
 				"structure": [
 					{
 						"name": "Type_Vente_PK",
@@ -1040,6 +451,106 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_aqz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Client_FK",
+						"type": "Int32"
+					},
+					{
+						"name": "CA",
+						"type": "Decimal"
+					},
+					{
+						"name": "Budget",
+						"type": "Decimal"
+					},
+					{
+						"name": "Date_facture",
+						"type": "DateTime"
+					},
+					{
+						"name": "Type_Vente_FK",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[Ventes]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dbo_Ventes_o_ojw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"NomBase": {
+							"value": "@dataset().NomBase",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"NomBase": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Client_FK",
+						"type": "Int32"
+					},
+					{
+						"name": "CA",
+						"type": "Decimal"
+					},
+					{
+						"name": "Budget",
+						"type": "Decimal"
+					},
+					{
+						"name": "Date_facture",
+						"type": "DateTime"
+					},
+					{
+						"name": "Type_Vente_FK",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[Ventes]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Currency Converter1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1099,64 +610,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF-FactLoader1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "This is a data flow example of how to load facts into your fact table from a single sample Employee dimension. There is also an example of handling early-arriving facts.",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Factures_CSV",
-								"type": "DatasetReference"
-							},
-							"name": "Facts"
-						},
-						{
-							"dataset": {
-								"referenceName": "DimEmp_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "DimEmployee"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "FactTable2_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "writeFactTable"
-						}
-					],
-					"transformations": [
-						{
-							"name": "SetAttributes"
-						},
-						{
-							"name": "LookupDimEmployee"
-						},
-						{
-							"name": "DailyAggs"
-						},
-						{
-							"name": "OrigData"
-						},
-						{
-							"name": "JoinAllColumns"
-						},
-						{
-							"name": "CheckForEarlyFact"
-						}
-					],
-					"script": "source(output(\n\t\temployeeID as string,\n\t\tHours as string,\n\t\tAmount as string,\n\t\tProjDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['SampleData/Facts/today/*.csv']) ~> Facts\nsource(output(\n\t\tEmpID as integer,\n\t\tsurrogatekey as string,\n\t\tRegion as string,\n\t\tStatus as string,\n\t\tEmpFunction as string,\n\t\tLevel as string,\n\t\tRole as string,\n\t\tStartDate as date,\n\t\tEndDate as date,\n\t\tiscurrent as integer,\n\t\tprocesstime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimEmployee\nFacts derive(employeeID = toInteger(employeeID),\n\t\tiscurrent = 1,\n\t\tfacttimestamp = currentTimestamp()) ~> SetAttributes\nSetAttributes, DimEmployee lookup(employeeID == EmpID\n\t&& SetAttributes@iscurrent == DimEmployee@iscurrent,\n\tmultiple: true,\n\tbroadcast: 'auto')~> LookupDimEmployee\nCheckForEarlyFact aggregate(groupBy(ProjDate,\n\t\temployeeID),\n\tTotalHours = sum(toInteger(Hours)),\n\t\tTotalAmount = sum(toInteger(Amount))) ~> DailyAggs\nLookupDimEmployee select(mapColumn(\n\t\temployeeID,\n\t\tHours,\n\t\tAmount,\n\t\tProjDate,\n\t\tfacttimestamp,\n\t\tEmpID,\n\t\tsurrogatekey,\n\t\tRegion,\n\t\tStatus,\n\t\tEmpFunction,\n\t\tLevel,\n\t\tRole,\n\t\tStartDate,\n\t\tEndDate,\n\t\tiscurrent = DimEmployee@iscurrent,\n\t\tprocesstime\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> OrigData\nDailyAggs, OrigData join(DailyAggs@ProjDate == OrigData@ProjDate\n\t&& DailyAggs@employeeID == OrigData@employeeID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinAllColumns\nLookupDimEmployee derive(employeeID = iif(isNull(employeeID),0,employeeID)) ~> CheckForEarlyFact\nJoinAllColumns sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tbatchSize: 50,\n\tmapColumn(\n\t\tProjDate = OrigData@ProjDate,\n\t\temployeeID = OrigData@employeeID,\n\t\tTotalHours,\n\t\tTotalAmount,\n\t\tfacttimestamp,\n\t\tsurrogatekey,\n\t\tRegion,\n\t\tStatus,\n\t\tEmpFunction,\n\t\tLevel,\n\t\tRole,\n\t\tprocesstime\n\t),\n\tpartitionBy('roundRobin', 4),\n\terrorHandlingOption: 'stopOnFirstError') ~> writeFactTable"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/MovieDemo1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1187,61 +640,6 @@
 						}
 					],
 					"script": "source(output(\n\t\tmovieId as string,\n\t\ttitle as string,\n\t\tgenres as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Movies\nMovies derive(year = toInteger(trim(right(title, 6), '()')),\n\t\ttitle = toString(left(title, length(title)-6))) ~> MoviesYear\nMoviesYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> Output"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Test SQL UPSERT')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Alter row = qualification des lignes en input\n(Create = implicite) ",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Produits_CSV",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						},
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable3",
-								"type": "DatasetReference"
-							},
-							"name": "target"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable3",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Window1"
-						},
-						{
-							"name": "AlterRow1"
-						},
-						{
-							"name": "Join1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Select2"
-						}
-					],
-					"script": "source(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> target\nJoin1 window(over(Produit = S_Produit),\n\tasc(S_Couleur, true),\n\tRank = denseRank()) ~> Window1\nWindow1 alterRow(updateIf(S_Couleur!=T_Couleur),\n\tdeleteIf(S_Couleur==T_Couleur)) ~> AlterRow1\nSelect1, Select2 join(S_Produit == T_Produit,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nsource select(mapColumn(\n\t\tS_Produit = Produit,\n\t\tS_Couleur = Couleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\ntarget select(mapColumn(\n\t\tT_Produit = Produit,\n\t\tT_Couleur = Couleur,\n\t\tT_Rank = Rank\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nAlterRow1 sink(input(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['Produit'],\n\tformat: 'table',\n\tmapColumn(\n\t\tProduit = S_Produit,\n\t\tCouleur = S_Couleur,\n\t\tRank\n\t),\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": []
@@ -1301,10 +699,370 @@
 							"name": "Select2"
 						}
 					],
-					"script": "source(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource, source1 lookup(source@Produit == source1@Produit,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nLookup1 select(mapColumn(\n\t\t{Produit Filtre} = source@Produit,\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Select1\nFilter1 keyGenerate(output(SGK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 aggregate(groupBy({Produit Filtre}),\n\twinner = last(SGK)) ~> Distinct\nSurrogateKey1, Distinct join(SGK == winner,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nSelect1 filter(!isNull({Produit})) ~> Filter1\nJoin1 select(mapColumn(\n\t\tProduit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
+					"script": "source(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource, source1 lookup(source@Produit == source1@Produit,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nLookup1 select(mapColumn(\n\t\t{Produit Filtre} = source@Produit,\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Select1\nFilter1 keyGenerate(output(SGK as long),\n\tstartAt: 1L,\n\tstepValue: 1L) ~> SurrogateKey1\nSurrogateKey1 aggregate(groupBy({Produit Filtre}),\n\twinner = last(SGK)) ~> Distinct\nSurrogateKey1, Distinct join(SGK == winner,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nSelect1 filter(!isNull({Produit})) ~> Filter1\nJoin1 select(mapColumn(\n\t\tProduit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tProduit as string\n\t)) ~> sink1"
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test lookup')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Produits2_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						},
+						{
+							"dataset": {
+								"referenceName": "Produits_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureBlob_Folder_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Lookup1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Aggregate1"
+						},
+						{
+							"name": "Filter2"
+						}
+					],
+					"script": "source(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nAggregate1, source1 lookup(Aggregate1@Produit == source1@Produit,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nFilter2 select(mapColumn(\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tcomptage = count(Produit)) ~> Aggregate1\nLookup1 filter(!isNull(source1@Produit) &&comptage == 1) ~> Filter2\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tProduit as string\n\t),\n\tpartitionFileNames:['Produits3.csv'],\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copie-Incremental-SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupOldWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * from watermarktable",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "WatermarkDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LookupNewWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SourceDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "IncrementalCopyActivity",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LookupNewWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LookupOldWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "[[dbo].[data_source_table]"
+							},
+							{
+								"name": "Destination",
+								"value": "adfv2branch/@{CONCAT('Incremental-', pipeline().RunId, '.txt')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_SQL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureBlob4_ABS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "StoredProceduretoWriteWatermarkActivity",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "IncrementalCopyActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[sp_write_watermark]",
+							"storedProcedureParameters": {
+								"LastModifiedtime": {
+									"value": {
+										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
+										"type": "Expression"
+									},
+									"type": "datetime"
+								},
+								"TableName": {
+									"value": {
+										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServer1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/WatermarkDataset_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopieVentes-Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "[[dbo].[Ventes]"
+							},
+							{
+								"name": "Destination",
+								"value": "@{pipeline().parameters.sinkBlobContainer}/@{CONCAT(pipeline().RunId, '.txt')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * from Ventes",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "dbo_Ventes_i_ojw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureBlob2_ABS",
+								"type": "DatasetReference",
+								"parameters": {
+									"path": {
+										"value": "@pipeline().parameters.sinkBlobContainer",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "NotificationSuccess",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-04.northeurope.logic.azure.com:443/workflows/aacb3517ccc4448caeabd027bef823f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c75baHOYmu-seRk18dxojF4Uu732zEpFUlTFHl3DzdU",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"message": "@{activity('Copy1').output.dataWritten}",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@pipeline().parameters.receiver"
+							}
+						}
+					},
+					{
+						"name": "NotificationFail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy1",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-00.northeurope.logic.azure.com:443/workflows/7bd654e9a315448bb4fee2d2586d3828/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Jv2oCPgGoW5RvJgqYAhx38KNWSBfTI3vEa--mug5emg",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"message": "@{activity('Copy1').error.message}",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@pipeline().parameters.receiver"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sinkBlobContainer": {
+						"type": "String"
+					},
+					"receiver": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dbo_Ventes_i_ojw')]"
+			]
 		}
 	]
 }

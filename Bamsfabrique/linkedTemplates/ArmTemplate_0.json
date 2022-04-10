@@ -19,10 +19,6 @@
 			"type": "secureString",
 			"metadata": "Chaîne sécurisée pour « functionKey » de « AzureFunction1 »"
 		},
-		"AzureSqlDatabase1_connectionString": {
-			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureSqlDatabase1 »"
-		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"type": "string",
 			"defaultValue": "https://bamakapp2.azurewebsites.net"
@@ -106,6 +102,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Http"
 				},
@@ -141,6 +141,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Azure AS"
 				},
@@ -348,6 +352,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"TenantID": {
 						"type": "String"
@@ -380,6 +388,7 @@
 				"activities": [
 					{
 						"name": "Wait",
+						"description": "yy",
 						"type": "Wait",
 						"dependsOn": [],
 						"userProperties": [],
@@ -404,6 +413,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -430,6 +443,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"variables": {
 					"Mon_nom": {
 						"type": "String",
@@ -439,6 +456,32 @@
 				"annotations": [
 					"Bamakus"
 				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test fail')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "fail",
+				"activities": [
+					{
+						"name": "Fail1",
+						"type": "Fail",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Error occured ...",
+							"errorCode": "3000"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -480,25 +523,8 @@
 					"functionKey": {
 						"type": "SecureString",
 						"value": "[parameters('AzureFunction1_functionKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"NomBase": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"authentication": "Anonymous"
 				}
 			},
 			"dependsOn": []
@@ -655,6 +681,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Functions"
 				},
@@ -696,6 +726,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Functions"
 				},

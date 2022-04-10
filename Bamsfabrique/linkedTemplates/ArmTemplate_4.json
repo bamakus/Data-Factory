@@ -29,353 +29,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/test lookup')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Produits2_CSV",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						},
-						{
-							"dataset": {
-								"referenceName": "Produits_CSV",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "AzureBlob_Folder_CSV",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Lookup1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Aggregate1"
-						},
-						{
-							"name": "Filter2"
-						}
-					],
-					"script": "source(output(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nAggregate1, source1 lookup(Aggregate1@Produit == source1@Produit,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nFilter2 select(mapColumn(\n\t\tProduit = source1@Produit,\n\t\tCouleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource aggregate(groupBy(Produit),\n\tcomptage = count(Produit)) ~> Aggregate1\nLookup1 filter(!isNull(source1@Produit) &&comptage == 1) ~> Filter2\nSelect1 sink(input(\n\t\tProduit as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Produits3.csv'],\n\tpartitionBy('hash', 1)) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copie-Incremental-SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LookupOldWaterMarkActivity",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select * from watermarktable",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "WatermarkDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LookupNewWaterMarkActivity",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SourceDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "IncrementalCopyActivity",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LookupNewWaterMarkActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LookupOldWaterMarkActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "[[dbo].[data_source_table]"
-							},
-							{
-								"name": "Destination",
-								"value": "adfv2branch/@{CONCAT('Incremental-', pipeline().RunId, '.txt')}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_SQL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob4_ABS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "StoredProceduretoWriteWatermarkActivity",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "IncrementalCopyActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[sp_write_watermark]",
-							"storedProcedureParameters": {
-								"LastModifiedtime": {
-									"value": {
-										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
-										"type": "Expression"
-									},
-									"type": "datetime"
-								},
-								"TableName": {
-									"value": {
-										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServer1",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopieVentes-Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "[[dbo].[Ventes]"
-							},
-							{
-								"name": "Destination",
-								"value": "@{pipeline().parameters.sinkBlobContainer}/@{CONCAT(pipeline().RunId, '.txt')}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "select * from Ventes",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "dbo_Ventes_i_ojw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlob2_ABS",
-								"type": "DatasetReference",
-								"parameters": {
-									"path": {
-										"value": "@pipeline().parameters.sinkBlobContainer",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "NotificationSuccess",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-04.northeurope.logic.azure.com:443/workflows/aacb3517ccc4448caeabd027bef823f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c75baHOYmu-seRk18dxojF4Uu732zEpFUlTFHl3DzdU",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/json"
-							},
-							"body": {
-								"message": "@{activity('Copy1').output.dataWritten}",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@pipeline().parameters.receiver"
-							}
-						}
-					},
-					{
-						"name": "NotificationFail",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Copy1",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-00.northeurope.logic.azure.com:443/workflows/7bd654e9a315448bb4fee2d2586d3828/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Jv2oCPgGoW5RvJgqYAhx38KNWSBfTI3vEa--mug5emg",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/json"
-							},
-							"body": {
-								"message": "@{activity('Copy1').error.message}",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@pipeline().parameters.receiver"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"sinkBlobContainer": {
-						"type": "String"
-					},
-					"receiver": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/CopieVentes-SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -435,6 +88,10 @@
 						]
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"windowStart": {
 						"type": "String"
@@ -455,6 +112,7 @@
 				"activities": [
 					{
 						"name": "Copy-dbo_DimClient",
+						"description": "aa",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -638,6 +296,10 @@
 						]
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"windowStart": {
 						"type": "String"
@@ -728,60 +390,14 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"tableList": {
 						"type": "Object"
 					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LoadFacts21')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data Flow Fact Loader",
-						"description": "This is a data flow example of how to load facts into your fact table from a single sample Employee dimension. There is also an example of handling early-arriving facts.",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF-FactLoader1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"Facts": {},
-									"DimEmployee": {
-										"NomBase": "MaBase"
-									},
-									"writeFactTable": {
-										"NomBase": "MaBase"
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"folder": {
-					"name": "Flows"
 				},
 				"annotations": []
 			},
@@ -823,6 +439,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Flows"
 				},
@@ -831,14 +451,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Test Data Flow UPSERT')]",
+			"name": "[concat(parameters('factoryName'), '/Test API HTTP2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Test SQL UPSERT",
-						"type": "ExecuteDataFlow",
+						"name": "Copy data API",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -849,27 +469,203 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Test SQL UPSERT",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"target": {},
-									"sink1": {}
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
 								}
 							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
+							"sink": {
+								"type": "BlobSink"
 							},
-							"traceLevel": "Fine"
-						}
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "URL_Http_Json2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureBlob3_ABS",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "json_http2.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy data SQL",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy data API",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "userId"
+										},
+										"sink": {
+											"name": "userId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "id"
+										},
+										"sink": {
+											"name": "id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "title"
+										},
+										"sink": {
+											"name": "title",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "body"
+										},
+										"sink": {
+											"name": "body",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureBlob3_ABS",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "json_http2.csv"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": "DistrisysDW"
+								}
+							}
+						]
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"token": {
+						"type": "string"
+					}
+				},
 				"folder": {
-					"name": "Flows"
+					"name": "Http"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test API REST2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "URL_Resource1_REST",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference",
+								"parameters": {
+									"NomBase": "DistrisysDW"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"token": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Http"
 				},
 				"annotations": []
 			},
@@ -912,6 +708,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Flows"
 				},
@@ -956,14 +756,16 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Flows"
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/test lookup')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Test_Conversion_Types')]",
@@ -1056,6 +858,10 @@
 						]
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -1185,6 +991,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"outputPath1": {
 						"type": "String"
@@ -1231,6 +1041,175 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DF-FactLoader1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This is a data flow example of how to load facts into your fact table from a single sample Employee dimension. There is also an example of handling early-arriving facts.",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Factures_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "Facts"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimEmp_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "DimEmployee"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "FactTable2_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "writeFactTable"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SetAttributes"
+						},
+						{
+							"name": "LookupDimEmployee"
+						},
+						{
+							"name": "DailyAggs"
+						},
+						{
+							"name": "OrigData"
+						},
+						{
+							"name": "JoinAllColumns"
+						},
+						{
+							"name": "CheckForEarlyFact"
+						}
+					],
+					"script": "source(output(\n\t\temployeeID as string,\n\t\tHours as string,\n\t\tAmount as string,\n\t\tProjDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['SampleData/Facts/today/*.csv']) ~> Facts\nsource(output(\n\t\tEmpID as integer,\n\t\tsurrogatekey as string,\n\t\tRegion as string,\n\t\tStatus as string,\n\t\tEmpFunction as string,\n\t\tLevel as string,\n\t\tRole as string,\n\t\tStartDate as date,\n\t\tEndDate as date,\n\t\tiscurrent as integer,\n\t\tprocesstime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimEmployee\nFacts derive(employeeID = toInteger(employeeID),\n\t\tiscurrent = 1,\n\t\tfacttimestamp = currentTimestamp()) ~> SetAttributes\nSetAttributes, DimEmployee lookup(employeeID == EmpID\n\t&& SetAttributes@iscurrent == DimEmployee@iscurrent,\n\tmultiple: true,\n\tbroadcast: 'auto')~> LookupDimEmployee\nCheckForEarlyFact aggregate(groupBy(ProjDate,\n\t\temployeeID),\n\tTotalHours = sum(toInteger(Hours)),\n\t\tTotalAmount = sum(toInteger(Amount))) ~> DailyAggs\nLookupDimEmployee select(mapColumn(\n\t\temployeeID,\n\t\tHours,\n\t\tAmount,\n\t\tProjDate,\n\t\tfacttimestamp,\n\t\tEmpID,\n\t\tsurrogatekey,\n\t\tRegion,\n\t\tStatus,\n\t\tEmpFunction,\n\t\tLevel,\n\t\tRole,\n\t\tStartDate,\n\t\tEndDate,\n\t\tiscurrent = DimEmployee@iscurrent,\n\t\tprocesstime\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> OrigData\nDailyAggs, OrigData join(DailyAggs@ProjDate == OrigData@ProjDate\n\t&& DailyAggs@employeeID == OrigData@employeeID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinAllColumns\nLookupDimEmployee derive(employeeID = iif(isNull(employeeID),0,employeeID)) ~> CheckForEarlyFact\nJoinAllColumns sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tbatchSize: 50,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tProjDate = OrigData@ProjDate,\n\t\temployeeID = OrigData@employeeID,\n\t\tTotalHours,\n\t\tTotalAmount,\n\t\tfacttimestamp,\n\t\tsurrogatekey,\n\t\tRegion,\n\t\tStatus,\n\t\tEmpFunction,\n\t\tLevel,\n\t\tRole,\n\t\tprocesstime\n\t),\n\tpartitionBy('roundRobin', 4)) ~> writeFactTable"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test SQL UPSERT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Alter row = qualification des lignes en input\n(Create = implicite) ",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Produits_CSV",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable3",
+								"type": "DatasetReference"
+							},
+							"name": "target"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable3",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Window1"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "Join1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Select2"
+						}
+					],
+					"script": "source(output(\n\t\tProduit as string,\n\t\tCouleur as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source\nsource(output(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> target\nJoin1 window(over(Produit = S_Produit),\n\tasc(S_Couleur, true),\n\tRank = denseRank()) ~> Window1\nWindow1 alterRow(updateIf(S_Couleur!=T_Couleur),\n\tdeleteIf(S_Couleur==T_Couleur)) ~> AlterRow1\nSelect1, Select2 join(S_Produit == T_Produit,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nsource select(mapColumn(\n\t\tS_Produit = Produit,\n\t\tS_Couleur = Couleur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\ntarget select(mapColumn(\n\t\tT_Produit = Produit,\n\t\tT_Couleur = Couleur,\n\t\tT_Rank = Rank\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tProduit as string,\n\t\tCouleur as string,\n\t\tRank as integer\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['Produit'],\n\tformat: 'table',\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tProduit = S_Produit,\n\t\tCouleur = S_Couleur,\n\t\tRank\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LoadFacts21')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data Flow Fact Loader",
+						"description": "This is a data flow example of how to load facts into your fact table from a single sample Employee dimension. There is also an example of handling early-arriving facts.",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF-FactLoader1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Facts": {},
+									"DimEmployee": {
+										"NomBase": "MaBase"
+									},
+									"writeFactTable": {
+										"NomBase": "MaBase"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF-FactLoader1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Master - Test Data Flow')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1251,6 +1230,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Flows"
 				},
@@ -1325,6 +1308,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"NomBase": {
 						"type": "string",
@@ -1393,10 +1380,65 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Iterations_Copie_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Test Data Flow UPSERT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Test SQL UPSERT",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Test SQL UPSERT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"target": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Flows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Test SQL UPSERT')]"
 			]
 		},
 		{
@@ -1428,9 +1470,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CopieVentes-Blob')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Run pip MASTER')]",
