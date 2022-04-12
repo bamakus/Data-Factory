@@ -13,6 +13,10 @@
 			"AKV_Secret_IDAnnuraire": {
 				"type": "string",
 				"value": "id-annuaire"
+			},
+			"AKV_Secret_NomAnnuaire": {
+				"type": "string",
+				"value": "MonCoffre2"
 			}
 		}
 	},
