@@ -1,0 +1,12 @@
+{
+	"name": "Bamsfabrique",
+	"properties": {
+		"globalParameters": {
+			"AKV_Secret_SecretApplication": {
+				"type": "string",
+				"value": "secret-application"
+			}
+		}
+	},
+	"location": "westeurope"
+}
