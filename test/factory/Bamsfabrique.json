@@ -6,7 +6,7 @@
 				"type": "string",
 				"value": "secret-application"
 			},
-			"AKV_Secret_IDApllication": {
+			"AKV_Secret_IDApplication": {
 				"type": "string",
 				"value": "id-application"
 			},
