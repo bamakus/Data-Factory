@@ -16,7 +16,7 @@
 			},
 			"AKV_Secret_NomAnnuaire": {
 				"type": "string",
-				"value": "bamakusfr"
+				"value": "bamakus.fr"
 			}
 		}
 	},
