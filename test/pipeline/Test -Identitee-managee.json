@@ -1,5 +1,5 @@
 {
-	"name": "Test -dentitee-managee",
+	"name": "Test -Identitee-managee",
 	"properties": {
 		"activities": [
 			{
@@ -17,17 +17,38 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM SYS.TABLES",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "AzureSqlTable4",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"ServerName": {
+								"value": "@pipeline().parameters.ServeurName",
+								"type": "Expression"
+							},
+							"DBName": {
+								"value": "@pipeline().parameters.ServeurName",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": false
 				}
 			}
 		],
+		"parameters": {
+			"ServeurName": {
+				"type": "string",
+				"defaultValue": "sql-sharepoint-che.database.windows.net"
+			},
+			"DBName": {
+				"type": "string",
+				"defaultValue": "SQL-Donnnees-Sharepoint"
+			}
+		},
 		"annotations": []
 	}
 }
