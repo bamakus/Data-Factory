@@ -30,7 +30,7 @@
 								"type": "Expression"
 							},
 							"DBName": {
-								"value": "@pipeline().parameters.ServeurName",
+								"value": "@pipeline().parameters.DBName",
 								"type": "Expression"
 							}
 						}
