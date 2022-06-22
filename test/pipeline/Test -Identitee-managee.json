@@ -41,10 +41,12 @@
 		],
 		"parameters": {
 			"ServeurName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sql-sharepoint-che.database.windows.net"
 			},
 			"DBName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "SQL-Donnnees-Sharepoint"
 			}
 		},
 		"annotations": []
