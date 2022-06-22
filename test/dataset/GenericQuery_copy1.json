@@ -17,17 +17,32 @@
 		},
 		"parameters": {
 			"ServerName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sql-sharepoint-che.database.windows.net"
 			},
 			"DBName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "SQL-Donnnees-Sharepoint"
 			},
 			"TableName": {
+				"type": "string"
+			},
+			"SchemaName": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SchemaName",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
 	}
 }
