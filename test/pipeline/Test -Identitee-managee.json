@@ -22,7 +22,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "AzureSqlTable4",
+						"referenceName": "GenericQuery",
 						"type": "DatasetReference",
 						"parameters": {
 							"ServerName": {
@@ -41,12 +41,10 @@
 		],
 		"parameters": {
 			"ServeurName": {
-				"type": "string",
-				"defaultValue": "sql-sharepoint-che.database.windows.net"
+				"type": "string"
 			},
 			"DBName": {
-				"type": "string",
-				"defaultValue": "SQL-Donnnees-Sharepoint"
+				"type": "string"
 			}
 		},
 		"annotations": []
