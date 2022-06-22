@@ -125,7 +125,11 @@
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@concat(item().SchemaName , item().TableName , '_V2')",
+											"value": "@concat(item().TableName , '_V2')",
+											"type": "Expression"
+										},
+										"SchemaName": {
+											"value": "item().SchemaName",
 											"type": "Expression"
 										}
 									}
