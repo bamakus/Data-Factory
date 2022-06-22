@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM SYS.TABLES",
+						"sqlReaderQuery": "SELECT SCHEMA_NAME(schema_id) as SchemaName ,name as TableName\nFROM sys.tables",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
