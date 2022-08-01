@@ -1,0 +1,24 @@
+{
+	"name": "Bamsfabrique",
+	"properties": {
+		"globalParameters": {
+			"AKV_Secret_SecretApplication": {
+				"type": "string",
+				"value": "secret-application"
+			},
+			"AKV_Secret_IDApplication": {
+				"type": "string",
+				"value": "id-application"
+			},
+			"AKV_Secret_IDAnnuraire": {
+				"type": "string",
+				"value": "id-annuaire"
+			},
+			"AKV_Secret_NomAnnuaire": {
+				"type": "string",
+				"value": "bamakus.fr"
+			}
+		}
+	},
+	"location": "westeurope"
+}

@@ -1,0 +1,118 @@
+{
+	"name": "PL_PowerBIGetActivityEvents_ADLS",
+	"properties": {
+		"description": "Extract Power BI Activity Events\nhttps://justb.dk/blog/2021/02/extracting-the-power-bi-activity-log-with-data-factory/\nCreated by: Just Blindbæk",
+		"activities": [
+			{
+				"name": "ForEach Day",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@range(1,pipeline().parameters.DaysToExtract)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy Activity Events",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{concat('activityevents?startDateTime=''', formatDateTime(adddays(utcnow(), -7), 'yyyy-MM-dd'), 'T00:00:00.000Z''&endDateTime=''', formatDateTime(adddays(utcnow(), -7), 'yyyy-MM-dd'), 'T23:59:59.999Z''')}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"additionalColumns": [
+										{
+											"name": "ADF_PipelineRunId",
+											"value": {
+												"value": "@pipeline().RunId",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "ADF_PipelineTriggerTime",
+											"value": {
+												"value": "@pipeline().TriggerTime",
+												"type": "Expression"
+											}
+										}
+									],
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$.continuationUri"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_REST_PowerBI",
+									"type": "DatasetReference",
+									"parameters": {
+										"AdminAPI": {
+											"value": "activityevents?startDateTime='@{formatDateTime(getPastTime(item(), 'Day'), 'yyyy-MM-dd')}T00:00:00.000Z'&endDateTime='@{formatDateTime(getPastTime(item(), 'Day'), 'yyyy-MM-dd')}T23:59:59.999Z'",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_Generic_JSON",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileSystem": "landing",
+										"Folder": {
+											"value": "powerbi-tenant/activityevents/@{formatDateTime(getPastTime(item(), 'Day'), 'yyyy')}/@{formatDateTime(getPastTime(item(), 'Day'), 'MM')}",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "powerbi_activityevents_@{formatDateTime(getPastTime(item(), 'Day'), 'yyyyMMdd')}.json",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"DaysToExtract": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"folder": {
+			"name": "Power BI monitor"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-02-19T19:36:32Z"
+	}
+}
