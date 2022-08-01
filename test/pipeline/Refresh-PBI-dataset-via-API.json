@@ -1,6 +1,7 @@
 {
 	"name": "Refresh-PBI-dataset-via-API",
 	"properties": {
+		"description": "https://datasavvy.me/2020/07/09/refreshing-a-power-bi-dataset-in-azure-data-factory/",
 		"activities": [
 			{
 				"name": "Call Dataset Refresh",
