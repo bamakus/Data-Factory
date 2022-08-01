@@ -4,32 +4,40 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Nom de fabrique de données",
+			"metadata": "Data Factory name",
 			"defaultValue": "Bamsfabrique"
 		},
 		"AzureBlob_connectionString": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlob »"
+			"metadata": "Secure string for 'connectionString' of 'AzureBlob'"
 		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureBlobStorage1 »"
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
 		},
 		"AzureFunction1_functionKey": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « functionKey » de « AzureFunction1 »"
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « AzureSqlDatabase1 »"
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
 		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « connectionString » de « SqlServer1 »"
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
 		},
 		"SqlServer1_password": {
 			"type": "secureString",
-			"metadata": "Chaîne sécurisée pour « password » de « SqlServer1 »"
+			"metadata": "Secure string for 'password' of 'SqlServer1'"
 		},
 		"AzureBlob2_ABS_properties_typeProperties_fileName": {
 			"type": "string",
@@ -99,6 +107,10 @@
 			"type": "string",
 			"defaultValue": "adfv2branch"
 		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapsedatalakestgen2.dfs.core.windows.net/"
+		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"type": "string",
 			"defaultValue": "https://bamakapp2.azurewebsites.net"
@@ -115,9 +127,21 @@
 			"type": "string",
 			"defaultValue": "https://jsonplaceholder.typicode.com"
 		},
+		"LS_REST_Generic_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": " https://api.powerbi.com/v1.0/myorg/admin/"
+		},
+		"LS_REST_Generic_properties_typeProperties_aadResourceId": {
+			"type": "string",
+			"defaultValue": "https://analysis.windows.net/powerbi/api"
+		},
 		"RestService1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://jsonplaceholder.typicode.com"
+		},
+		"SharePoint Online_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https://', linkedService().NomTenant, '.sharepoint.com/sites/')}"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
@@ -152,11 +176,11 @@
 		},
 		"containerUri": {
 			"type": "string",
-			"metadata": "URI pour le compte de stockage contenant des modèles ARM liés"
+			"metadata": "URI to storage account containing linked ARM templates"
 		},
 		"containerSasToken": {
 			"type": "string",
-			"metadata": "Jeton SAS pour le compte de stockage contenant des modèles ARM liés"
+			"metadata": "Sas token to storage account containing linked ARM templates"
 		}
 	},
 	"variables": {
@@ -183,8 +207,17 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
 					"AzureFunction1_functionKey": {
 						"value": "[parameters('AzureFunction1_functionKey')]"
+					},
+					"AzureSqlDatabase2_connectionString": {
+						"value": "[parameters('AzureSqlDatabase2_connectionString')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					},
 					"AzureFunction1_properties_typeProperties_functionAppUrl": {
 						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
@@ -198,8 +231,35 @@
 					"HttpServer1_properties_typeProperties_url": {
 						"value": "[parameters('HttpServer1_properties_typeProperties_url')]"
 					},
+					"LS_REST_Generic_properties_typeProperties_url": {
+						"value": "[parameters('LS_REST_Generic_properties_typeProperties_url')]"
+					},
+					"LS_REST_Generic_properties_typeProperties_aadResourceId": {
+						"value": "[parameters('LS_REST_Generic_properties_typeProperties_aadResourceId')]"
+					},
 					"RestService1_properties_typeProperties_url": {
 						"value": "[parameters('RestService1_properties_typeProperties_url')]"
+					},
+					"SharePoint Online_properties_typeProperties_url": {
+						"value": "[parameters('SharePoint Online_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "Bamsfabrique_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime3_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
@@ -221,24 +281,6 @@
 					},
 					"AzureBlob3_ABS_properties_typeProperties_folderPath": {
 						"value": "[parameters('AzureBlob3_ABS_properties_typeProperties_folderPath')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "Bamsfabrique_ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					},
 					"AzureBlob4_ABS_properties_typeProperties_fileName": {
 						"value": "[parameters('AzureBlob4_ABS_properties_typeProperties_fileName')]"
@@ -266,18 +308,6 @@
 					},
 					"AzureBlob_Folder_ABS_properties_typeProperties_folderPath": {
 						"value": "[parameters('AzureBlob_Folder_ABS_properties_typeProperties_folderPath')]"
-					},
-					"Orders_Json_ABS_properties_typeProperties_fileName": {
-						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_fileName')]"
-					},
-					"Orders_Json_ABS_properties_typeProperties_folderPath": {
-						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_folderPath')]"
-					},
-					"Produit_Json_ABS_properties_typeProperties_fileName": {
-						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_fileName')]"
-					},
-					"Produit_Json_ABS_properties_typeProperties_folderPath": {
-						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -307,6 +337,18 @@
 					},
 					"SqlServer1_password": {
 						"value": "[parameters('SqlServer1_password')]"
+					},
+					"Orders_Json_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_fileName')]"
+					},
+					"Orders_Json_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('Orders_Json_ABS_properties_typeProperties_folderPath')]"
+					},
+					"Produit_Json_ABS_properties_typeProperties_fileName": {
+						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_fileName')]"
+					},
+					"Produit_Json_ABS_properties_typeProperties_folderPath": {
+						"value": "[parameters('Produit_Json_ABS_properties_typeProperties_folderPath')]"
 					},
 					"SqlServer1_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
@@ -350,6 +392,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "Bamsfabrique_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer": {
 						"value": "[parameters('Copie de fichiers - Blog - trigger_properties_Copie de Fichiers - Blob_parameters_sinkBlobContainer')]"
@@ -366,7 +428,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_3')]"
+				"[resourceId('Microsoft.Resources/deployments', 'Bamsfabrique_ArmTemplate_4')]"
 			]
 		}
 	]

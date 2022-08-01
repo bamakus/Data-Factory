@@ -11,10 +11,16 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"AzureFunction1_functionKey": {
 			"value": ""
 		},
 		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase2_connectionString": {
 			"value": ""
 		},
 		"SqlServer1_connectionString": {
@@ -74,6 +80,9 @@
 		"Produit_Json_ABS_properties_typeProperties_folderPath": {
 			"value": "adfv2branch"
 		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://synapsedatalakestgen2.dfs.core.windows.net/"
+		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"value": "https://bamakapp2.azurewebsites.net"
 		},
@@ -86,8 +95,17 @@
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://jsonplaceholder.typicode.com"
 		},
+		"LS_REST_Generic_properties_typeProperties_url": {
+			"value": " https://api.powerbi.com/v1.0/myorg/admin/"
+		},
+		"LS_REST_Generic_properties_typeProperties_aadResourceId": {
+			"value": "https://analysis.windows.net/powerbi/api"
+		},
 		"RestService1_properties_typeProperties_url": {
 			"value": "https://jsonplaceholder.typicode.com"
+		},
+		"SharePoint Online_properties_typeProperties_url": {
+			"value": "@{concat('https://', linkedService().NomTenant, '.sharepoint.com/sites/')}"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"value": "MONSERVEUR\\Administrator"
