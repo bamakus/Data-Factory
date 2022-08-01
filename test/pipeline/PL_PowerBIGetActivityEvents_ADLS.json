@@ -1,7 +1,7 @@
 {
 	"name": "PL_PowerBIGetActivityEvents_ADLS",
 	"properties": {
-		"description": "Extract Power BI Activity Events\n\nCreated by: Just Blindbæk",
+		"description": "Extract Power BI Activity Events\nhttps://justb.dk/blog/2021/02/extracting-the-power-bi-activity-log-with-data-factory/\nCreated by: Just Blindbæk",
 		"activities": [
 			{
 				"name": "ForEach Day",
