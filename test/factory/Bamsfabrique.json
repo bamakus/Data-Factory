@@ -16,7 +16,7 @@
 			},
 			"AKV_Secret_NomAnnuaire": {
 				"type": "string",
-				"value": "https://moncoffre2.vault.azure.net"
+				"value": "bamakusfr"
 			},
 			"AKV_URL": {
 				"type": "string",
