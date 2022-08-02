@@ -14,7 +14,7 @@
 				"type": "string",
 				"value": "id-annuaire"
 			},
-			"AKV_Secret_NomAnnuaire": {
+			"AKV_NomAnnuaire": {
 				"type": "string",
 				"value": "https://moncoffre2.vault.azure.net"
 			}
