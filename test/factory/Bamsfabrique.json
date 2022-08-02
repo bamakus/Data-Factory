@@ -16,11 +16,7 @@
 			},
 			"AKV_Secret_NomAnnuaire": {
 				"type": "string",
-				"value": "bamakus.fr"
-			},
-			"AKV_URL": {
-				"type": "string",
-				"value": "ZS"
+				"value": "moncoffre2"
 			}
 		}
 	},
