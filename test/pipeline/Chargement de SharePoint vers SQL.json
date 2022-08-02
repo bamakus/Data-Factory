@@ -155,7 +155,7 @@
 				"typeProperties": {
 					"variableName": "Body  acces token",
 					"value": {
-						"value": "@concat('grant_type=client_credentials&client_id=',\n  activity('Obtenir ID du client').output.value,\n  '@',\n  activity('Obtenir ID du tenant').output.value,\n  '&client_secret=',\n  activity('Obtenir secret du client').output.value,\n  '&resource=00000003-0000-0ff1-ce00-000000000000/',\n  pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '.sharepoint.com@',\n  activity('Obtenir ID du tenant').output.value)",
+						"value": "@concat('grant_type=client_credentials&client_id=',\n  activity('Obtenir ID du client').output.value,\n  '@',\n  activity('Obtenir ID du tenant').output.value,\n  '&client_secret=',\n  activity('Obtenir secret du client').output.value)",
 						"type": "Expression"
 					}
 				}
