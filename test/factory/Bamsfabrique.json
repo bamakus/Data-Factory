@@ -17,6 +17,10 @@
 			"AKV_Secret_NomAnnuaire": {
 				"type": "string",
 				"value": "https://moncoffre2.vault.azure.net"
+			},
+			"AKV_URL": {
+				"type": "string",
+				"value": "aa"
 			}
 		}
 	},
