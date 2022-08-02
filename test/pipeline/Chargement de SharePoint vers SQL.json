@@ -1,6 +1,7 @@
 {
 	"name": "Chargement de SharePoint vers SQL",
 	"properties": {
+		"description": "https://docs.microsoft.com/en-us/azure/data-factory/connector-sharepoint-online-list?tabs=data-factory#copy-file-from-sharepoint-online",
 		"activities": [
 			{
 				"name": "Obtenir ID du tenant",
