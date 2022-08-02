@@ -13,7 +13,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  'secrets/',\n  pipeline().globalParameters.AKV_Secret_IDAnnuaire,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
 			},
 			{
 				"name": "Obtenir ID du client",
@@ -26,7 +37,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  'secrets/',\n  pipeline().globalParameters.AKV_Secret_IDApplication,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
 			},
 			{
 				"name": "Obtenir secret du client",
@@ -39,7 +61,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  'secrets/',\n  pipeline().globalParameters.AKV_Secret_SecretApplication,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
 			},
 			{
 				"name": "Obtenir le token",
@@ -68,10 +101,24 @@
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
+					"secureOutput": true,
+					"secureInput": true
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://accounts.accesscontrol.windows.net/',\n  activity('Obtenir ID du tenant').output.value,\n  '/tokens/OAuth/2')",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "@concat('grant_type=client_credentials&client_id=',\n  activity('Obtenir ID du client').output.value,\n  '@',\n  activity('Obtenir ID du tenant').output.value,\n  '&client_secret=',\n  activity('Obtenir secret du client').output.value,\n  '&resource=00000003-0000-0ff1-ce00-000000000000/',\n  pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '.sharepoint.com@',\n  activity('Obtenir ID du tenant').output.value)",
+						"type": "Expression"
+					}
+				}
 			},
 			{
 				"name": "Copie Excel vers SQL",
@@ -97,6 +144,20 @@
 				}
 			}
 		],
+		"variables": {
+			"NomSiteSharePoint": {
+				"type": "String",
+				"defaultValue": "Donnescharger"
+			},
+			"NomListeSharePoint": {
+				"type": "String",
+				"defaultValue": "BibliothqueDocuments"
+			},
+			"NomDossierSharePoint": {
+				"type": "String",
+				"defaultValue": "Doss1/Doss2"
+			}
+		},
 		"annotations": []
 	}
 }
