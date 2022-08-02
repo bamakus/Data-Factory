@@ -40,7 +40,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  'secrets/',\n  pipeline().globalParameters.AKV_Secret_IDApplication,\n  '?api-version=7.0')",
+						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '/secrets/',\n  pipeline().globalParameters.AKV_Secret_IDApplication,\n  '?api-version=7.0')",
 						"type": "Expression"
 					},
 					"method": "GET",
@@ -64,7 +64,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  'secrets/',\n  pipeline().globalParameters.AKV_Secret_SecretApplication,\n  '?api-version=7.0')",
+						"value": "@concat(pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '/secrets/',\n  pipeline().globalParameters.AKV_Secret_SecretApplication,\n  '?api-version=7.0')",
 						"type": "Expression"
 					},
 					"method": "GET",
