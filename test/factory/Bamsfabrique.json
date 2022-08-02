@@ -20,7 +20,7 @@
 			},
 			"AKV_URL": {
 				"type": "string",
-				"value": "aa"
+				"value": "https://moncoffre2.vault.azure.net"
 			}
 		}
 	},
