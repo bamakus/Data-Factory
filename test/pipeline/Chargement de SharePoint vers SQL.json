@@ -79,19 +79,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Obtenir ID du tenant",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Obtenir ID du client",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Obtenir secret du client",
+						"activity": "Set variable2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -107,7 +95,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat('https://accounts.accesscontrol.windows.net/',\n  activity('Obtenir ID du tenant').output.value,\n  '/tokens/OAuth/2')",
+						"value": "@variables('URL  acces token')",
 						"type": "Expression"
 					},
 					"method": "POST",
@@ -115,6 +103,58 @@
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
 					"body": {
+						"value": "@variables('Body  acces token')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Obtenir secret du client",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Obtenir ID du client",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Obtenir ID du tenant",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "URL  acces token",
+					"value": {
+						"value": "@concat('https://accounts.accesscontrol.windows.net/',\n  activity('Obtenir ID du tenant').output.value,\n  '/tokens/OAuth/2')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Body  acces token",
+					"value": {
 						"value": "@concat('grant_type=client_credentials&client_id=',\n  activity('Obtenir ID du client').output.value,\n  '@',\n  activity('Obtenir ID du tenant').output.value,\n  '&client_secret=',\n  activity('Obtenir secret du client').output.value,\n  '&resource=00000003-0000-0ff1-ce00-000000000000/',\n  pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '.sharepoint.com@',\n  activity('Obtenir ID du tenant').output.value)",
 						"type": "Expression"
 					}
@@ -133,6 +173,12 @@
 			"NomDossierSharePoint": {
 				"type": "String",
 				"defaultValue": "Doss1/Doss2"
+			},
+			"URL  acces token": {
+				"type": "String"
+			},
+			"Body  acces token": {
+				"type": "String"
 			}
 		},
 		"annotations": []
