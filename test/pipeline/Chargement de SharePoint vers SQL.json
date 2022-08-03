@@ -241,7 +241,15 @@
 						"referenceName": "Generic_SQL_Table",
 						"type": "DatasetReference",
 						"parameters": {
-							"NomTable": "Activity_updatefolderaccess"
+							"NomTable": "Activity_updatefolderaccess",
+							"NomServeur": {
+								"value": "@variables('serveurSQL')",
+								"type": "Expression"
+							},
+							"NomDB": {
+								"value": "@variables('DB')",
+								"type": "Expression"
+							}
 						}
 					}
 				]
@@ -265,6 +273,14 @@
 			},
 			"Body  acces token": {
 				"type": "String"
+			},
+			"serveurSQL": {
+				"type": "String",
+				"defaultValue": "sql-sharepoint-che.database.windows.net"
+			},
+			"DB": {
+				"type": "String",
+				"defaultValue": "SQL-Donnnees-Sharepoint"
 			}
 		},
 		"annotations": []
