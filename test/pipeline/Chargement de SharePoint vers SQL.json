@@ -231,8 +231,8 @@
 								"value": "@variables('NomDossierSharePoint')",
 								"type": "Expression"
 							},
-							"NomFichierSharePoint": "Activity_updatefolderaccessi.xlsx",
-							"NomFeuilleExcel": "Activity_updatefolderaccess"
+							"NomFichierSharePoint": "Activity_updatefolderaccess.xlsx",
+							"NomFeuilleExcel": "Sheet1"
 						}
 					}
 				],
