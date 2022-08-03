@@ -220,7 +220,7 @@
 								"type": "Expression"
 							},
 							"NomSiteSharePoint": {
-								"value": "\t@variables(‘NomSiteSharePoint’)",
+								"value": "@variables('NomSiteSharePoint')",
 								"type": "Expression"
 							},
 							"NomListeSharePoint": {
