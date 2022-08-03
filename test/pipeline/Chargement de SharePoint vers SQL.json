@@ -80,7 +80,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Set variable3",
+						"activity": "Set variable2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -231,7 +231,7 @@
 								"value": "@variables('NomDossierSharePoint')",
 								"type": "Expression"
 							},
-							"NomFichierSharePoint": "Activity_updatefolderaccess.xlsx",
+							"NomFichierSharePoint": "Activity_updatefolderaccess.xlsxo",
 							"NomFeuilleExcel": "Activity_updatefolderaccess"
 						}
 					}
@@ -253,26 +253,6 @@
 						}
 					}
 				]
-			},
-			{
-				"name": "Set variable3",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Set variable2",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "URL Relative",
-					"value": {
-						"value": "@concat(variables('NomSiteSharePoint'),\n  '/_api/web/GetFileByServerRelativeUrl(''',\n  '/sites/',\n  variables('NomSiteSharePoint'),\n   '/',\n  variables('NomListeSharePoint'), '/',\n  variables('NomDossierSharePoint'), '/',\n  'aa.csv',\n  '',\n  ')/$value')",
-						"type": "Expression"
-					}
-				}
 			}
 		],
 		"variables": {
