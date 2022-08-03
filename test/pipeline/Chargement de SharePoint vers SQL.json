@@ -80,7 +80,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Set variable2",
+						"activity": "Set variable3",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -253,6 +253,26 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Set variable3",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "URL Relative",
+					"value": {
+						"value": "@concat(variables('NomSiteSharePoint'),\n  '/_api/web/GetFileByServerRelativeUrl(''',\n  '/sites/',\n  variables('NomSiteSharePoint'),\n   '/',\n  variables('NomListeSharePoint'), '/',\n  variables('NomDossierSharePoint'), '/',\n  'aa.csv',\n  '',\n  ')/$value')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
@@ -281,6 +301,9 @@
 			"DB": {
 				"type": "String",
 				"defaultValue": "SQL-Donnnees-Sharepoint"
+			},
+			"URL Relative": {
+				"type": "String"
 			}
 		},
 		"annotations": []

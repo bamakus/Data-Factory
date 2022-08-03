@@ -42,7 +42,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@concat(dataset().NomSiteSharePoint,\n  '/_api/web/GetFileByServerRelativeUrl(''',\n  '/sites/',\n  dataset().NomSiteSharePoint,\n   '/',\n  dataset().NomListeSharePoint, '/',\n  dataset().NomDossierSharePoint, '/',\n  dataset().NomFichierSharePoint,\n  '',\n  ')/$value')",
+					"value": "@concat('https://bamakusfr.sharepoint.com/',dataset().NomSiteSharePoint,\n  '/_api/web/GetFileByServerRelativeUrl(''',\n  '/sites/',\n  dataset().NomSiteSharePoint,\n   '/',\n  dataset().NomListeSharePoint, '/',\n  dataset().NomDossierSharePoint, '/',\n  dataset().NomFichierSharePoint,\n  ')/$value')\n\n",
 					"type": "Expression"
 				}
 			},
