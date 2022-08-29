@@ -286,6 +286,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "Demo Geiger"
+		},
 		"annotations": []
 	}
 }

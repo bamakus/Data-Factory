@@ -1,0 +1,223 @@
+{
+	"name": "run Python",
+	"properties": {
+		"activities": [
+			{
+				"name": "task python",
+				"type": "Custom",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": {
+						"value": "@concat('python main2.py',' ', pipeline().parameters.param1)",
+						"type": "Expression"
+					},
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "task python -Refresh PBI dataflow",
+				"type": "Custom",
+				"dependsOn": [
+					{
+						"activity": "task python - load SQL formated table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": "python main.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "task python -API",
+				"type": "Custom",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": "python main.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Task python - Load RAW SQL",
+				"type": "Custom",
+				"dependsOn": [
+					{
+						"activity": "task python -API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": "python main.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "task python - load SQL formated table",
+				"type": "Custom",
+				"dependsOn": [
+					{
+						"activity": "Task python - Load RAW SQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": "python main.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "task python - Refresh PBI dataset",
+				"type": "Custom",
+				"dependsOn": [
+					{
+						"activity": "task python -Refresh PBI dataflow",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": "python main.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"Param1": {
+				"type": "string",
+				"defaultValue": "AA"
+			}
+		},
+		"folder": {
+			"name": "Test Azure Batch"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-09-17T06:57:30Z"
+	}
+}
