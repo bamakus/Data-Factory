@@ -237,7 +237,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "select 1 "
+							"text": "select 1 as a"
 						}
 					]
 				}
