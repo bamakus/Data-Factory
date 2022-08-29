@@ -1,0 +1,294 @@
+{
+	"name": "Chargement de SharePoint vers SQL",
+	"properties": {
+		"description": "https://docs.microsoft.com/en-us/azure/data-factory/connector-sharepoint-online-list?tabs=data-factory#copy-file-from-sharepoint-online",
+		"activities": [
+			{
+				"name": "Obtenir ID du tenant",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_URL,\n  '/secrets/',\n  pipeline().globalParameters.AKV_Secret_IDAnnuaire,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Obtenir ID du client",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_URL,\n  '/secrets/',\n  pipeline().globalParameters.AKV_Secret_IDApplication,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Obtenir secret du client",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.AKV_URL,\n  '/secrets/',\n  pipeline().globalParameters.AKV_Secret_SecretApplication,\n  '?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Obtenir le token",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": true
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@variables('URL  acces token')",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "@variables('Body  acces token')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Obtenir secret du client",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Obtenir ID du client",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Obtenir ID du tenant",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "URL  acces token",
+					"value": {
+						"value": "@concat('https://accounts.accesscontrol.windows.net/',\n  activity('Obtenir ID du tenant').output.value,\n  '/tokens/OAuth/2')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Body  acces token",
+					"value": {
+						"value": "@concat('grant_type=client_credentials&client_id=',\n  activity('Obtenir ID du client').output.value,\n  '@',\n  activity('Obtenir ID du tenant').output.value,\n  '&client_secret=',\n  activity('Obtenir secret du client').output.value,\n  '&resource=00000003-0000-0ff1-ce00-000000000000/',\n  pipeline().globalParameters.AKV_Secret_NomAnnuaire,\n  '.sharepoint.com@',\n  activity('Obtenir ID du tenant').output.value)\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Obtenir le token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET",
+							"additionalHeaders": {
+								"value": "\t@{concat('Authorization: Bearer ',\n  activity('Obtenir le token').output.access_token)}",
+								"type": "Expression"
+							},
+							"requestTimeout": ""
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Generic_Excel_depuis_SharePoint",
+						"type": "DatasetReference",
+						"parameters": {
+							"NomTenant": {
+								"value": "@pipeline().globalParameters.AKV_Secret_NomAnnuaire",
+								"type": "Expression"
+							},
+							"NomSiteSharePoint": {
+								"value": "@variables('NomSiteSharePoint')",
+								"type": "Expression"
+							},
+							"NomListeSharePoint": {
+								"value": "@variables('NomListeSharePoint')",
+								"type": "Expression"
+							},
+							"NomDossierSharePoint": {
+								"value": "@variables('NomDossierSharePoint')",
+								"type": "Expression"
+							},
+							"NomFichierSharePoint": "Activity_updatefolderaccess.xlsx",
+							"NomFeuilleExcel": "Sheet1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Generic_SQL_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"NomTable": "Activity_updatefolderaccess",
+							"NomServeur": {
+								"value": "@variables('serveurSQL')",
+								"type": "Expression"
+							},
+							"NomDB": {
+								"value": "@variables('DB')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"NomSiteSharePoint": {
+				"type": "String",
+				"defaultValue": "Donnescharger"
+			},
+			"NomListeSharePoint": {
+				"type": "String",
+				"defaultValue": "BibliothqueDocuments"
+			},
+			"NomDossierSharePoint": {
+				"type": "String",
+				"defaultValue": "Doss1/Doss2"
+			},
+			"URL  acces token": {
+				"type": "String"
+			},
+			"Body  acces token": {
+				"type": "String"
+			},
+			"serveurSQL": {
+				"type": "String",
+				"defaultValue": "sql-sharepoint-che.database.windows.net"
+			},
+			"DB": {
+				"type": "String",
+				"defaultValue": "SQL-Donnnees-Sharepoint"
+			},
+			"URL Relative": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Demo Geiger"
+		},
+		"annotations": []
+	}
+}

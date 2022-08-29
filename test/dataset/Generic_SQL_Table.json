@@ -1,0 +1,40 @@
+{
+	"name": "Generic_SQL_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"ServerName": {
+					"value": "@dataset().NomServeur",
+					"type": "Expression"
+				},
+				"DBName": {
+					"value": "@dataset().NomDB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"NomTable": {
+				"type": "string"
+			},
+			"NomServeur": {
+				"type": "string"
+			},
+			"NomDB": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().NomTable",
+				"type": "Expression"
+			}
+		}
+	}
+}
