@@ -285,7 +285,7 @@
 					{
 						"activity": "task python message",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
