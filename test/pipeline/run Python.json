@@ -7,9 +7,9 @@
 				"type": "Custom",
 				"dependsOn": [
 					{
-						"activity": "task python mesage",
+						"activity": "Set variable1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"command": {
-						"value": "@concat('python main2.py',' ', pipeline().parameters.param1)",
+						"value": "@concat('python main2.py',' ', variables('message'))",
 						"type": "Expression"
 					},
 					"resourceLinkedService": {
@@ -250,7 +250,7 @@
 				}
 			},
 			{
-				"name": "task python mesage",
+				"name": "task python message",
 				"type": "Custom",
 				"dependsOn": [],
 				"policy": {
@@ -262,7 +262,59 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"command": "message2.py",
+					"command": "python message2.py",
+					"resourceLinkedService": {
+						"referenceName": "AzureBlobStorageBatch",
+						"type": "LinkedServiceReference"
+					},
+					"folderPath": "input",
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureBatch1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "task python message",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "message",
+					"value": {
+						"value": "@activity('task python message').output.customOutput.my_key",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "task python_copy1",
+				"type": "Custom",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"command": {
+						"value": "@concat('python main2.py',' ', pipeline().parameters.param1)",
+						"type": "Expression"
+					},
 					"resourceLinkedService": {
 						"referenceName": "AzureBlobStorageBatch",
 						"type": "LinkedServiceReference"
@@ -283,6 +335,11 @@
 			"Param1": {
 				"type": "string",
 				"defaultValue": "AA"
+			}
+		},
+		"variables": {
+			"message": {
+				"type": "String"
 			}
 		},
 		"folder": {
