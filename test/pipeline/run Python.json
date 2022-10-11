@@ -1,6 +1,7 @@
 {
 	"name": "run Python",
 	"properties": {
+		"description": "https://medium.com/@ashish.kats/custom-batch-activity-in-azure-data-factory-110d8c1c957b",
 		"activities": [
 			{
 				"name": "task python",
