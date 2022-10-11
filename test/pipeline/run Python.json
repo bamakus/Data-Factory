@@ -251,6 +251,7 @@
 			},
 			{
 				"name": "task python message",
+				"description": "https://medium.com/@ashish.kats/custom-batch-activity-in-azure-data-factory-110d8c1c957b",
 				"type": "Custom",
 				"dependsOn": [],
 				"policy": {
