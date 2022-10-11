@@ -281,6 +281,7 @@
 			},
 			{
 				"name": "Set variable1",
+				"description": "https://medium.com/@ashish.kats/custom-batch-activity-in-azure-data-factory-110d8c1c957b",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
